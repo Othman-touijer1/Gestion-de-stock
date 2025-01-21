@@ -31,7 +31,7 @@ Route::post('/ajouter_produit', [HomeController::class, 'store']);
 Route::get('/get_produit/{id}', [HomeController::class, 'getProduit']);
 Route::post('/modifier_produit/{id}', [HomeController::class, 'update']);
 Route::post('/supprimer_produit/{id}', [HomeController::class, 'destroy']);
-
+Route::get('/api/product-inventory/{product}', 'ProductController@getInventory');
 
 
 //DEPOTS
@@ -42,12 +42,28 @@ Route::delete('/depots/{id}', [DepotController::class, 'destroy'])->name('depots
 Route::get('/depot/{id}', [DepotController::class, 'show'])->name('depot.show');
 
 
+
 //DEPOT&PRODUIT
 Route::get('/produit-depot/create', [ProduitDepotController::class, 'create'])->name('produit-depot.create');
 Route::post('/produit-depot', [ProduitDepotController::class, 'store'])->name('produit-depot.store');
-Route::post('/depot/{depot_id}/produit/{produit_id}/update', [DepotController::class, 'updateQuantite']);
-Route::delete('/depot/{depot_id}/produit/{produit_id}/delete', [DepotController::class, 'deleteProduitFromDepot']);
 Route::get('/historique', [ProduitDepotController::class, 'historique'])->name('historique');
+Route::put('/produit-depot/update', [ProduitDepotController::class, 'update'])->name('produit-depot.update');
+Route::post('/destroy_depotproduit/{id}', [ProduitDepotController::class, 'destroyy']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Route::get('/dashboard', function () {

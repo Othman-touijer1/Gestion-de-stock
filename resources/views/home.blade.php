@@ -368,7 +368,7 @@
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">PASCALE SHOP</a>
+            <a class="navbar-brand ps-3" href="index.html">TR STORE</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -450,16 +450,23 @@
                                     </div>
                                     
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        Villes
+                                        Error
                                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="/historique">Historique</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <!-- <nav class="sb-sidenav-menu-nested nav">
                                             <a class="nav-link" href="401.html">Casablanca</a>
                                             <a class="nav-link" href="404.html">Rabat</a>
                                             <a class="nav-link" href="500.html">Tanger</a>
                                             <a class="nav-link" href="">Marrakech</a>
-                                        </nav>
+                                        </nav> -->
                                     </div>
                                 </nav>
                             </div>
@@ -504,26 +511,7 @@
                             </div>
                         @endforeach
                         </div>
-                        <div class="row">
-                            <!-- <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Area Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div> -->
-                            <!-- <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Bar Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div> -->
-                        </div>
+                        
                         <div class="card mb-4" style="margin-top:30px">
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -539,24 +527,23 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($produits as $produit)
-                                        <tr>
-                                            <td>{{ $produit->titre }}</td>
-                                            <td><img src="{{ asset('storage/' . $produit->image) }}" alt="{{ $produit->titre }}" width="100"></td>
-                                            <td>{{ $produit->referent_id }}</td>
-                                            <td>{{ $produit->description }}</td>
-                                            <td>{{ $produit->categorie }}</td>   
-                                            <td>
-                                                <a href="" class="btn btn-info btn-sm">
-                                                    <i class="fas fa-eye"></i> Voir
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                          <tr>
+                                              <td>{{ $produit->titre }}</td>
+                                              <td><img src="{{ asset('storage/' . $produit->image) }}" alt="{{ $produit->titre }}" width="100"></td>
+                                              <td>{{ $produit->referent_id }}</td>
+                                              <td>{{ $produit->description }}</td>
+                                              <td>{{ $produit->categorie }}</td>   
+                                              <td>
+                                                  <a href="" class="btn btn-info btn-sm">
+                                                      <i class="fas fa-eye"></i> Voir
+                                                  </a>
+                                              </td>
+                                          </tr>
+                                        @endforeach 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

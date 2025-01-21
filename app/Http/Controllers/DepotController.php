@@ -35,8 +35,8 @@ class DepotController extends Controller
     {
         $depot = Depot::findOrFail($id);
         $produits_depot = ProduitDepot::where('depot_id', $id)
-            ->join('produits', 'produit_depot.produit_id', '=', 'produits.id')
-            ->select('produits.*', 'produit_depot.quantite')
+            ->join('produits', 'produit_depots.produit_id', '=', 'produits.id')
+            ->select('produits.*', 'produit_depots.quantite')
             ->get();
 
         return view('Depots.show', compact('depot', 'produits_depot'));

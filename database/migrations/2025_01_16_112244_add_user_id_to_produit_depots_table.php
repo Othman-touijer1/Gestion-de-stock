@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('produit_depot', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+        Schema::table('produit_depots', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id')->after('quantite');
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::table('produit_depot', function (Blueprint $table) {
+        Schema::table('produit_depots', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
     }
-
 };

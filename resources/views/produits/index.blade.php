@@ -6,172 +6,369 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title></title>
+        <title>TR STORE</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        
         <style>
             /* Variables pour les couleurs */
-:root {
-  --primary-color: #4f46e5;
-  --secondary-color: #818cf8;
-  --success-color: #22c55e;
-  --warning-color: #eab308;
-  --danger-color: #ef4444;
-  --dark-color: #1e293b;
-  --light-color: #f8fafc;
-}
+        :root {
+        --primary-color: #4f46e5;
+        --secondary-color: #818cf8;
+        --success-color: #22c55e;
+        --warning-color: #eab308;
+        --danger-color: #ef4444;
+        --dark-color: #1e293b;
+        --light-color: #f8fafc;
+        }
 
-/* Styles généraux et transitions */
-* {
-  transition: all 0.3s ease-in-out;
-}
+        /* Styles généraux et transitions */
+        * {
+        transition: all 0.3s ease-in-out;
+        }
 
-/* Navigation supérieure */
-.sb-topnav {
-  background: linear-gradient(135deg, var(--dark-color), #2d3748) !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        /* Navigation supérieure */
+        .sb-topnav {
+        background: linear-gradient(135deg, var(--dark-color), #2d3748) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.navbar-brand {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
+        .navbar-brand {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        }
 
-.navbar-brand:hover {
-  transform: translateY(-1px);
-}
+        .navbar-brand:hover {
+        transform: translateY(-1px);
+        }
 
-/* Sidebar */
-.sb-sidenav {
-  background: linear-gradient(180deg, var(--dark-color), #2d3748) !important;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
+        /* Sidebar */
+        .sb-sidenav {
+        background: linear-gradient(180deg, var(--dark-color), #2d3748) !important;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
 
-.sb-sidenav-menu .nav-link {
-  border-left: 3px solid transparent;
-  margin: 2px 0;
-}
+        .sb-sidenav-menu .nav-link {
+        border-left: 3px solid transparent;
+        margin: 2px 0;
+        }
 
-.sb-sidenav-menu .nav-link:hover {
-  border-left-color: var(--primary-color);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateX(5px);
-}
+        .sb-sidenav-menu .nav-link:hover {
+        border-left-color: var(--primary-color);
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateX(5px);
+        }
 
-/* Cards des villes */
-.card {
-  border: none;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transform: translateY(0);
-}
+        /* Cards des villes */
+        .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+        }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
+        .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
-.bg-primary {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
-}
+        .bg-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        }
 
-.bg-warning {
-  background: linear-gradient(135deg, var(--warning-color), #fbbf24) !important;
-}
+        .bg-warning {
+        background: linear-gradient(135deg, var(--warning-color), #fbbf24) !important;
+        }
 
-.bg-success {
-  background: linear-gradient(135deg, var(--success-color), #34d399) !important;
-}
+        .bg-success {
+        background: linear-gradient(135deg, var(--success-color), #34d399) !important;
+        }
 
-.bg-danger {
-  background: linear-gradient(135deg, var(--danger-color), #f87171) !important;
-}
+        .bg-danger {
+        background: linear-gradient(135deg, var(--danger-color), #f87171) !important;
+        }
 
-/* Tableau */
-#datatablesSimple {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
+        /* Tableau */
+        #datatablesSimple {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
 
-#datatablesSimple thead th {
-  background-color: var(--dark-color);
-  color: white;
-  padding: 15px;
-}
+        #datatablesSimple thead th {
+        background-color: var(--dark-color);
+        color: white;
+        padding: 15px;
+        }
 
-#datatablesSimple tbody tr:hover {
-  background-color: rgba(79, 70, 229, 0.05);
-}
+        #datatablesSimple tbody tr:hover {
+        background-color: rgba(79, 70, 229, 0.05);
+        }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+        /* Animations */
+        @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+        }
 
-.container-fluid {
-  animation: fadeIn 0.5s ease-out;
-}
+        .container-fluid {
+        animation: fadeIn 0.5s ease-out;
+        }
 
-/* Images dans le tableau */
-#datatablesSimple img {
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
+        /* Images dans le tableau */
+        #datatablesSimple img {
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+        }
 
-#datatablesSimple img:hover {
-  transform: scale(1.1);
-}
+        #datatablesSimple img:hover {
+        transform: scale(1.1);
+        }
 
-/* Footer */
-footer {
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
-}
+        /* Footer */
+        footer {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+        }
 
-/* Boutons et liens */
-.btn, .nav-link {
-  position: relative;
-  overflow: hidden;
-}
+        /* Boutons et liens */
+        .btn, .nav-link {
+        position: relative;
+        overflow: hidden;
+        }
 
-.btn::after, .nav-link::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
+        .btn::after, .nav-link::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+        }
 
-.btn:hover::after, .nav-link:hover::after {
-  width: 200px;
-  height: 200px;
-}
+        .btn:hover::after, .nav-link:hover::after {
+        width: 200px;
+        height: 200px;
+        }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .card {
-    margin-bottom: 1rem;
-  }
-  
-  .sb-sidenav-menu .nav-link:hover {
-    transform: translateX(0);
-  }
-}
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .sb-sidenav-menu .nav-link:hover {
+            transform: translateX(0);
+        }
+        }
+        /* Variables */
+        :root {
+          --primary: #6366f1;
+          --primary-dark: #4f46e5;
+          --secondary: #64748b;
+          --success: #10b981;
+          --warning: #f59e0b;
+          --danger: #ef4444;
+          --dark: #0f172a;
+          --light: #f8fafc;
+          --gray-100: #f1f5f9;
+          --gray-200: #e2e8f0;
+          --gray-800: #1e293b;
+        }
 
+        /* Reset et styles de base */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          transition: all 0.2s ease-in-out;
+        }
+
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: var(--gray-100);
+        }
+
+        /* Navigation supérieure */
+        .sb-topnav {
+          background: var(--dark) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+          font-weight: 700;
+          background: linear-gradient(45deg, var(--primary), #818cf8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          padding: 0.5rem 1rem;
+        }
+
+        /* Sidebar */
+        .sb-sidenav {
+          background: var(--dark) !important;
+          border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sb-sidenav-menu .nav-link {
+          color: var(--gray-200) !important;
+          padding: 1rem 1.5rem;
+          border-radius: 0.5rem;
+          margin: 0.25rem 1rem;
+        }
+
+        .sb-sidenav-menu .nav-link:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateX(5px);
+        }
+
+        .sb-sidenav-menu-heading {
+          color: var(--primary) !important;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        /* Cards */
+        .card {
+          background: white;
+          border-radius: 1rem;
+          border: none;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+          background: white;
+          border-bottom: 1px solid var(--gray-200);
+          padding: 1.25rem;
+          border-radius: 1rem 1rem 0 0 !important;
+        }
+
+        .card-body {
+          padding: 1.5rem;
+        }
+
+        /* Cards des dépôts */
+        .border-left-primary {
+          border-left: 4px solid var(--primary);
+          transition: transform 0.3s ease;
+        }
+
+        .border-left-primary:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tableau */
+        #datatablesSimple {
+          border-radius: 0.5rem;
+          overflow: hidden;
+        }
+
+        #datatablesSimple thead th {
+          background: var(--gray-800);
+          color: white;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          padding: 1rem;
+        }
+
+        #datatablesSimple tbody tr:hover {
+          background-color: var(--gray-100);
+        }
+
+        /* Images dans le tableau */
+        #datatablesSimple img {
+          border-radius: 0.5rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dashboard header */
+        .breadcrumb {
+          background: transparent;
+          padding: 0.75rem 0;
+        }
+
+        .breadcrumb-item.active {
+          color: var(--primary);
+          font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+          background: white !important;
+          border-top: 1px solid var(--gray-200);
+        }
+
+        footer a {
+          color: var(--primary);
+          text-decoration: none;
+        }
+
+        footer a:hover {
+          color: var(--primary-dark);
+          text-decoration: underline;
+        }
+
+        /* Boutons et contrôles */
+        .btn {
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          font-weight: 500;
+        }
+
+        .btn-primary {
+          background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+          border: none;
+        }
+
+        .form-control {
+          border-radius: 0.5rem;
+          padding: 0.75rem 1rem;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .container-fluid {
+          animation: slideIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .sb-sidenav-menu .nav-link {
+            margin: 0.25rem 0.5rem;
+          }
+          
+          .card {
+            margin-bottom: 1rem;
+          }
+          
+          .container-fluid {
+            padding: 1rem !important;
+          }
+        }
         </style>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
+            <a class="navbar-brand ps-3" href="index.html">TR STORE</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -258,27 +455,31 @@ footer {
                                     </a>
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="/historique">Historique</a>
                                             <a class="nav-link" href="404.html">404 Page</a>
                                             <a class="nav-link" href="500.html">500 Page</a>
                                         </nav>
                                     </div>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <!-- <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">Casablanca</a>
+                                            <a class="nav-link" href="404.html">Rabat</a>
+                                            <a class="nav-link" href="500.html">Tanger</a>
+                                            <a class="nav-link" href="">Marrakech</a>
+                                        </nav> -->
+                                    </div>
                                 </nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="charts.html">
+                            <a class="nav-link" href="/indexdepot">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
+                                Dépots
                             </a>
-                            <a class="nav-link" href="tables.html">
+                            <a class="nav-link" href="/produit-depot/create">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Factures
+                                Ajouter P-->D
                             </a>
                         </div>
-                    </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Start Bootstrap
                     </div>
                 </nav>
             </div>
@@ -362,6 +563,7 @@ footer {
                     </div>
                 </div>
                 </main>
+            
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

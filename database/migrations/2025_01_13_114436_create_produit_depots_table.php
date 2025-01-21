@@ -8,28 +8,27 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('produit_depot', function (Blueprint $table) {
+        Schema::create('produit_depots', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produit_id');
             $table->unsignedBigInteger('depot_id');
             $table->integer('quantite');
             $table->timestamps();
 
-            // Modification de la référence vers la table 'depot' au singulier
             $table->foreign('produit_id')
                   ->references('id')
                   ->on('produits')
                   ->onDelete('cascade');
-            
+
             $table->foreign('depot_id')
                   ->references('id')
-                  ->on('depot')  // Changé de 'depots' à 'depot'
+                  ->on('depots')  
                   ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('produit_depot');
+        Schema::dropIfExists('produit_depots');
     }
 };

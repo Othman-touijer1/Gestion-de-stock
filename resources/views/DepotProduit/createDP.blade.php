@@ -143,7 +143,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('produit-depot.store') }}">
+                    <form action="{{ route('produit-depot.store') }}" method="POST">
                         @csrf
 
                         <div class="form-group mb-3">
@@ -214,8 +214,12 @@
                                             <td>{{ $produitDepot->quantite }}</td>
                                             <td>
                                             <!-- Ajoutez ici vos boutons d'action (modifier, supprimer, etc.) -->
-                                                <button class="btn btn-sm btn-primary">Modifier</button>
-                                                <button class="btn btn-sm btn-danger">Supprimer</button>
+                                                <button class="btn btn-sm btn-primary" onclick="editProduitDepot('{{ $produitDepot->produit_id }}', '{{ $produitDepot->depot_id }}', '{{ $produitDepot->quantite }}')">Modifier</button>
+                                                <form action="/destroy_depotproduit/{{ $produitDepot->id }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                </form>
+
                                             </td>
                                         </tr>
                                      @endforeach
@@ -225,8 +229,53 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Modifier le produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('produit-depot.update') }}" method="POST" id="editForm">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="form-group mb-3">
+                            <label for="edit_produit_id">Produit</label>
+                            <select name="produit_id" id="edit_produit_id" class="form-control" required>
+                                <option value="">Sélectionnez un produit</option>
+                                @foreach($produits as $produit)
+                                    <option value="{{ $produit->id }}">{{ $produit->titre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_depot_id">Dépôt</label>
+                            <select name="depot_id" id="edit_depot_id" class="form-control" required>
+                                <option value="">Sélectionnez un dépôt</option>
+                                @foreach($depots as $depot)
+                                    <option value="{{ $depot->id }}">{{ $depot->nom }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="edit_quantite">Quantité</label>
+                            <input type="number" name="quantite" id="edit_quantite" class="form-control" required min="1">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-                    
+    </div>
+        </div>            
             <footer class="bg-light mt-auto py-4">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
@@ -246,3 +295,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to populate and show the edit modal
+            window.editProduitDepot = function(produitId, depotId, quantite) {
+                document.getElementById('edit_produit_id').value = produitId;
+                document.getElementById('edit_depot_id').value = depotId;
+                document.getElementById('edit_quantite').value = quantite;
+                
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            }
+        });
+    </script>

@@ -511,7 +511,6 @@
                             </div>
                         @endforeach
                         </div>
-                        
                         <div class="card mb-4" style="margin-top:30px">
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -532,12 +531,12 @@
                                               <td><img src="{{ asset('storage/' . $produit->image) }}" alt="{{ $produit->titre }}" width="100"></td>
                                               <td>{{ $produit->referent_id }}</td>
                                               <td>{{ $produit->description }}</td>
-                                              <td>{{ $produit->categorie }}</td>   
-                                              <td>
-                                                  <a href="" class="btn btn-info btn-sm">
-                                                      <i class="fas fa-eye"></i> Voir
-                                                  </a>
-                                              </td>
+                                              <td>{{ $produit->categorie }}</td> 
+                                              <td>  
+                                              <button onclick="viewProduit({{ $produit->id }})" class="btn btn-info">
+                                                  <i class="fas fa-eye"></i> Voir
+                                              </button>
+                                              </td>  
                                           </tr>
                                         @endforeach 
                                     </tbody>
@@ -545,6 +544,37 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Détails du Produit</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-3">
+                                    <img id="produitImage" src="" alt="Image du produit" class="img-fluid rounded shadow" style="max-height: 250px;">
+                                </div>
+                                <h5 id="produitTitre" class="text-center mb-3"></h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Dépôt</th>
+                                                <th>Quantité</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="depotsQuantites">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
@@ -569,3 +599,35 @@
         <script src="js/datatables-simple-demo.js"></script>
     </body>
 </html>
+<script>
+function viewProduit(id) {
+    fetch(`{{ url('view_produit') }}/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            // Mise à jour de l'image
+            document.getElementById('produitImage').src = `{{ asset('storage') }}/${data.produit.image}`;
+            document.getElementById('produitTitre').textContent = data.produit.titre;
+            
+            // Mise à jour des quantités par dépôt
+            const tableBody = document.getElementById('depotsQuantites');
+            tableBody.innerHTML = '';
+            
+            data.depots.forEach(depot => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${depot.nom}</td>
+                    <td class="text-center">${depot.quantite}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Afficher le modal
+            const modal = new bootstrap.Modal(document.getElementById('viewModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors du chargement des données');
+        });
+}
+</script>

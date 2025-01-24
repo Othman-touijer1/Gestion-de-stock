@@ -6,6 +6,8 @@
     <title>Ajouter un nouveau produit</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
     <style>
@@ -185,6 +187,19 @@
                                 </span>
                             @enderror
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="type">Type de mouvement</label>
+                            <select name="type" id="type" class="form-control @error('type') is-invalid @enderror" required>
+                                <option value="">Sélectionnez un type</option>
+                                <option value="addition">Addition <i class='bx bx-up-arrow-alt' style='color:#18f30f'></i></option>
+                                <option value="soustraction">Soustraction <i class='bx bx-down-arrow-alt' style='color:#f30f12'></i></option>
+                            </select>
+                            @error('type')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">
@@ -203,6 +218,7 @@
                                         <th>Produit</th>
                                         <th>Dépôt</th>
                                         <th>Quantité</th>
+                                        <th>Type</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -212,6 +228,7 @@
                                             <td>{{ $produitDepot->produit->titre }}</td>
                                             <td>{{ $produitDepot->depot->nom }}</td>
                                             <td>{{ $produitDepot->quantite }}</td>
+                                            <td>{{ $produitDepot->type}}</td>
                                             <td>
                                             <!-- Ajoutez ici vos boutons d'action (modifier, supprimer, etc.) -->
                                                 <button class="btn btn-sm btn-primary" onclick="editProduitDepot('{{ $produitDepot->produit_id }}', '{{ $produitDepot->depot_id }}', '{{ $produitDepot->quantite }}')">Modifier</button>
@@ -265,6 +282,15 @@
                             <label for="edit_quantite">Quantité</label>
                             <input type="number" name="quantite" id="edit_quantite" class="form-control" required min="1">
                         </div>
+                        <div class="form-group mb-3">
+                        <label for="type">Type de mouvement</label>
+                            <select name="type" id="edit_type" class="form-control @error('type') is-invalid @enderror" required >
+                                <option value="">Sélectionnez un type</option>
+                                <option value="addition">Addition <i class='bx bx-up-arrow-alt' style='color:#18f30f'></i></option>
+                                <option value="soustraction">Soustraction <i class='bx bx-down-arrow-alt' style='color:#f30f12'></i></option>
+                            </select>
+                        </div>
+                        
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -302,6 +328,7 @@
                 document.getElementById('edit_produit_id').value = produitId;
                 document.getElementById('edit_depot_id').value = depotId;
                 document.getElementById('edit_quantite').value = quantite;
+                document.getElementById('edit_type').value = type;
                 
                 const editModal = new bootstrap.Modal(document.getElementById('editModal'));
                 editModal.show();

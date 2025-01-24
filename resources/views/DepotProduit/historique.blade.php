@@ -584,6 +584,7 @@
                                     <th>Produit</th>
                                     <th>Depot</th>
                                     <th>Quantité</th>
+                                    <th>Type</th>
                                     <th>Heure</th>
                                 </tr>
                             </thead>
@@ -594,6 +595,7 @@
                                         <td>{{ $produitDepot->produit ? $produitDepot->produit->titre : 'Produit inconnu' }}</td>
                                         <td>{{ $produitDepot->depot ? $produitDepot->depot->nom : 'Dépôt inconnu' }}</td>
                                         <td>{{ $produitDepot->quantite }}</td>
+                                        <td>{{ $produitDepot->type}}</td>
                                         <td>{{ $produitDepot->created_at->format('d/m/Y H:i') }}</td>
                                     </tr>
                                 @endforeach

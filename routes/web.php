@@ -31,7 +31,9 @@ Route::post('/ajouter_produit', [HomeController::class, 'store']);
 Route::get('/get_produit/{id}', [HomeController::class, 'getProduit']);
 Route::post('/modifier_produit/{id}', [HomeController::class, 'update']);
 Route::post('/supprimer_produit/{id}', [HomeController::class, 'destroy']);
-Route::get('/api/product-inventory/{product}', 'ProductController@getInventory');
+Route::get('/view_produit/{id}', [HomeController::class, 'viewProduit'])->name('view.produit');
+
+
 
 
 //DEPOTS
@@ -40,7 +42,6 @@ Route::get('/depots/create', [DepotController::class, 'craetedepot'])->name('dep
 Route::post('/depots', [DepotController::class, 'store'])->name('depots.store');
 Route::delete('/depots/{id}', [DepotController::class, 'destroy'])->name('depots.destroy');
 Route::get('/depot/{id}', [DepotController::class, 'show'])->name('depot.show');
-
 
 
 //DEPOT&PRODUIT

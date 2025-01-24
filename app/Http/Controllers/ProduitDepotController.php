@@ -21,27 +21,45 @@ class ProduitDepotController extends Controller
     }
     
     public function store(Request $request)
-    {
-        $request->validate([
-            'produit_id' => 'required|exists:produits,id',
-            'depot_id' => 'required|exists:depots,id',
-            'quantite' => 'required|numeric|min:1'
-        ]);
+{
+    $request->validate([
+        'produit_id' => 'required|exists:produits,id',
+        'depot_id' => 'required|exists:depots,id',
+        'quantite' => 'required|numeric|min:1',
+        'type' => 'required|in:addition,soustraction'
+    ]);
 
-        ProduitDepot::create([
-            'produit_id' => $request->produit_id,
-            'depot_id' => $request->depot_id,
-            'quantite' => $request->quantite,
-            'user_id' => auth()->user()->id, // L'utilisateur connecté
-        ]);
-        return redirect()->back()->with('success', 'Produit ajouté au dépôt avec succès!');
+    // Calculer le stock actuel pour ce produit dans ce dépôt
+    $currentStock = ProduitDepot::where([
+        'produit_id' => $request->produit_id,
+        'depot_id' => $request->depot_id
+    ])->sum('quantite');
+
+    // Vérifier si la quantité de soustraction est supérieure au stock
+    if ($request->type == 'soustraction' && $request->quantite > $currentStock) {
+        return redirect()->back()->with('error', 'Quantité insuffisante en stock!');
     }
+
+    ProduitDepot::create([
+        'produit_id' => $request->produit_id,
+        'depot_id' => $request->depot_id,
+        'quantite' => $request->quantite,
+        'type' => $request->type,
+        'user_id' => auth()->user()->id,
+    ]);
+
+    return redirect()->back()->with('success', 'Produit ajouté au dépôt avec succès!');
+}
+
+
+
     public function update(Request $request)
     {
         $request->validate([
             'produit_id' => 'required|exists:produits,id',
             'depot_id' => 'required|exists:depots,id',
-            'quantite' => 'required|numeric|min:1'
+            'quantite' => 'required|numeric|min:1',
+            'type' => 'required|in:addition,soustraction'
         ]);
 
         ProduitDepot::where([
@@ -49,6 +67,7 @@ class ProduitDepotController extends Controller
             'depot_id' => $request->depot_id
         ])->update([
             'quantite' => $request->quantite,
+            'type' => $request->type,
             'user_id' => auth()->user()->id
         ]);
 

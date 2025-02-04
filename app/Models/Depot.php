@@ -23,5 +23,9 @@ class Depot extends Model
     {
         return $this->hasMany(ProduitDepot::class);
     }
+    public function historiques()
+    {
+        return $this->hasMany(Historique::class, 'depot_id');
+    }
 
 }

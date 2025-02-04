@@ -10,6 +10,8 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
         
         <style>
             /* Variables pour les couleurs */
@@ -363,6 +365,179 @@
             padding: 1rem !important;
           }
         }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-top:80px;
+            margin-left:70px;
+        }
+
+        .container {
+            max-width: 1100px;
+            padding:300px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .totals {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .total-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+    @keyframes backdropFadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 0.5; }
+    }
+    
+
         </style>
     </head>
     <body class="sb-nav-fixed">
@@ -456,7 +631,7 @@
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
                                             <a class="nav-link" href="/historique">Historique</a>
-                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="/indexF">Factures</a>
                                             <a class="nav-link" href="500.html">500 Page</a>
                                         </nav>
                                     </div>
@@ -483,62 +658,96 @@
                     </div>
                 </nav>
             </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <center><h1 class="mt-4">Ajouter un nouveau produit</h1></center>
-                        <div class="card mb-4">
-                        <div class="card-body">
-                            <form action="/ajouter_produit" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="titreProduit" class="form-label">Titre du produit</label>
-                                    <input type="text" class="form-control" id="titreProduit" name="titreProduit" required />
-                                </div>
-                                <!-- Image du produit -->
-                                <div class="mb-3">
-                                    <label for="imageProduit" class="form-label">Image du produit</label>
-                                    <input class="form-control" type="file" id="imageProduit" name="imageProduit" required />
-                                </div>
-                                <!-- Nom Référent -->
-                                <div class="mb-3">
-                                    <label for="nomReferent" class="form-label">Référent</label>
-                                    <input type="number" class="form-control" id="nomReferent" name="nomReferent" required />
-                                </div>
-                                <!-- Description du produit -->
-                                <div class="mb-3">
-                                    <label for="descriptionProduit" class="form-label">Description du produit</label>
-                                    <textarea class="form-control" id="descriptionProduit" name="descriptionProduit" rows="4" required></textarea>
-                                </div>
-                                <!-- Catégories -->
-                                <div class="mb-3">
-                                    <label for="categoriesProduit" class="form-label">Catégories</label>
-                                    <select class="form-control" id="categoriesProduit" name="categoriesProduit" required>
-                                        <option value="" disabled selected>Sélectionnez une catégorie</option>
-                                        <option value="electronique">Électronique</option>
-                                        <option value="vetements">Vêtements</option>
-                                        <option value="accessoires">Accessoires</option>
-                                        <option value="meubles">Meubles</option>
-                                    </select>
-                                </div>
-                                <!-- Bouton d'envoi -->
-                                <button type="submit" class="btn btn-primary">Ajouter le produit</button>
-                            </form>
-                        </div>
-                    </div>
+            <div class="container">
+        <div class="form-header">
+            <h1>Nouvelle Facture</h1>
+        </div>
+
+        <form id="invoice-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Numéro de Facture</label>
+                    <input type="text" id="invoice-number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="invoice-date" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Société</label>
+                    <input type="text" id="company-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Adrésse</label>
+                    <input type="text" id="company-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Télé</label>
+                    <input type="number" id="company-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Adrésse de client</label>
+                    <input type="text" id="company-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Client</label>
+                    <input type="text" id="client-name" required>
+                </div>
+            </div>
+
+            <table id="invoice-items">
+                <thead>
+                    <tr>
+                        <th>Désignation</th>
+                        <th>Produit</th>
+                        <th>Prix HT</th>
+                        <th>Quantité</th>
+                        <th>TVA (%)</th>
+                        <th>Remise (%)</th>
+                        <th>Total HT</th>
+                        <th>Total TTC</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+
+            <button type="button" id="add-row" class="btn btn-primary">
+                Ajouter une ligne
+            </button>
+             
+            <div class="totals">
+                <div class="total-row">
+                    <span>Total HT</span>
+                    <span id="total-ht">0.00 €</span>
+                </div>
+                <div class="total-row">
+                    <span>Total TVA</span>
+                    <span id="total-tva">0.00 €</span>
+                </div>
+                <div class="total-row">
+                    <span>Total TTC</span>
+                    <span id="total-ttc">0.00 €</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn btn-primary" onclick="saveInvoice()">
+                    Enregistrer
+                </button>
+                <button type="button" class="btn btn-danger" onclick="resetForm()">
+                    Réinitialiser
+                </button>
+            </div>
+        </form>
+    </div>
+
                 </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
@@ -548,5 +757,117 @@
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+        <script>
+        let itemRows = [];
+
+        function createNewRow() {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" class="table-input designation" required></td>
+                <div class="form-group mb-3" style="margin-top:15px;">
+                        
+                            <select name="produit_id" id="produit_id" class="form-control @error('produit_id') is-invalid @enderror" required>
+                                <option value=""></option>
+                                @foreach($produits as $produit)
+                                    <option value="{{ $produit->id }}">{{ $produit->titre }}</option>
+                                @endforeach
+                            </select>
+                            @error('produit_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                <td><input type="number" class="table-input price" min="0" step="0.01" required></td>
+                <td><input type="number" class="table-input quantity" min="1" value="1" required></td>
+                <td><input type="number" class="table-input tva" min="0" max="100" value="20" required></td>
+                <td><input type="number" class="table-input discount" min="0" max="100" value="0" required></td>
+                <td class="total-ht">0.00</td>
+                <td class="total-ttc">0.00</td>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeRow(this)">❌</button>
+                </td>
+            `;
+
+            // Ajouter les écouteurs d'événements aux inputs
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => calculateRowTotal(row));
+            });
+
+            return row;
+        }
+
+        function calculateRowTotal(row) {
+            const price = parseFloat(row.querySelector('.price').value) || 0;
+            const quantity = parseInt(row.querySelector('.quantity').value) || 0;
+            const tva = parseFloat(row.querySelector('.tva').value) || 0;
+            const discount = parseFloat(row.querySelector('.discount').value) || 0;
+
+            const totalHT = price * quantity * (1 - discount / 100);
+            const totalTVA = totalHT * (tva / 100);
+            const totalTTC = totalHT + totalTVA;
+
+            row.querySelector('.total-ht').textContent = totalHT.toFixed(2);
+            row.querySelector('.total-ttc').textContent = totalTTC.toFixed(2);
+
+            calculateGlobalTotals();
+        }
+
+        function calculateGlobalTotals() {
+            let globalTotalHT = 0;
+            let globalTotalTVA = 0;
+            let globalTotalTTC = 0;
+
+            document.querySelectorAll('#invoice-items tbody tr').forEach(row => {
+                const totalHT = parseFloat(row.querySelector('.total-ht').textContent);
+                const totalTTC = parseFloat(row.querySelector('.total-ttc').textContent);
+                const totalTVA = totalTTC - totalHT;
+
+                globalTotalHT += totalHT;
+                globalTotalTVA += totalTVA;
+                globalTotalTTC += totalTTC;
+            });
+
+            document.getElementById('total-ht').textContent = globalTotalHT.toFixed(2) + ' €';
+            document.getElementById('total-tva').textContent = globalTotalTVA.toFixed(2) + ' €';
+            document.getElementById('total-ttc').textContent = globalTotalTTC.toFixed(2) + ' €';
+        }
+
+        function addRow() {
+            const tbody = document.querySelector('#invoice-items tbody');
+            const newRow = createNewRow();
+            tbody.appendChild(newRow);
+            calculateGlobalTotals();
+        }
+
+        function removeRow(button) {
+            const tbody = document.querySelector('#invoice-items tbody');
+            if (tbody.children.length > 1) {
+                button.closest('tr').remove();
+                calculateGlobalTotals();
+            }
+        }
+
+        function saveInvoice() {
+            // Ici vous pouvez ajouter la logique pour sauvegarder la facture
+            alert('Facture sauvegardée avec succès!');
+        }
+
+        function resetForm() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire ?')) {
+                document.getElementById('invoice-form').reset();
+                const tbody = document.querySelector('#invoice-items tbody');
+                tbody.innerHTML = '';
+                addRow();
+                calculateGlobalTotals();
+            }
+        }
+
+        // Initialisation du formulaire
+        document.getElementById('add-row').addEventListener('click', addRow);
+        document.getElementById('invoice-date').valueAsDate = new Date();
+        addRow(); // Ajouter la première ligne au chargement
+    </script>
     </body>
 </html>

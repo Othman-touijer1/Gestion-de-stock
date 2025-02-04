@@ -1,327 +1,273 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Ajouter un nouveau produit</title>
-    <!-- Bootstrap CSS -->
+    <title>TR STORE - Navigation Verticale</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
     <style>
-        /* Navigation styles */
-        .sb-topnav {
-            background: linear-gradient(135deg, #1e293b, #2d3748);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        :root {
+            --primary: #4f46e5;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --sidebar-width: 250px;
         }
 
-        .sb-sidenav {
-            background: linear-gradient(180deg, #1e293b, #2d3748);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        /* Layout de base */
+        body {
             min-height: 100vh;
-            width: 250px;
+            margin: 0;
+            background-color: var(--light);
         }
 
-        .sb-sidenav-dark {
-            background-color: #1e293b;
-            color: rgba(255, 255, 255, 0.5);
+        /* Navigation verticale */
+        .vertical-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark), #2d3748);
+            padding-top: 3.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
-        .sb-sidenav .nav-link {
-            color: rgba(255, 255, 255, 0.5);
-            padding: 0.75rem 1rem;
+        /* Logo et titre */
+        .site-title {
+            color: white;
+            font-size: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+
+        /* Menu items */
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin: 0.5rem 0;
+        }
+
+        .nav-link {
             display: flex;
             align-items: center;
-        }
-
-        .sb-sidenav .nav-link:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sb-sidenav-menu-heading {
-            padding: 1rem;
-            font-weight: bold;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        /* Form styles */
-        .form-control {
-            background-color: white;
-            border: 2px solid #e2e8f0;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-        }
-
-        .form-control:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #4f46e5;
-            border: none;
             padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            color: rgba(255,255,255,0.8) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
-            background-color: #4338ca;
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white !important;
+            padding-left: 2rem;
         }
 
-        /* Layout styles */
-        #layoutSidenav {
-            display: flex;
+        .nav-link i {
+            width: 20px;
+            margin-right: 10px;
         }
 
-        #layoutSidenav_content {
-            flex: 1;
-            padding: 1.5rem;
+        /* Séparateurs de sections */
+        .nav-section {
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 1.5rem 1.5rem 0.5rem;
+            letter-spacing: 0.5px;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .sb-sidenav {
-                width: 200px;
-            }
+        /* Contenu principal */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
         }
+
         /* Table styles */
-        .table-container {
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 1.5rem 0;
-            overflow: hidden;
-        }
-
         .table {
-            margin-bottom: 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        .table thead th {
-            background-color: #f8fafc;
-            border-bottom: 2px solid #e2e8f0;
-            color: #1e293b;
-            font-weight: 600;
+        .table th {
+            background-color: var(--dark);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
             padding: 1rem;
-            white-space: nowrap;
         }
 
-        .table tbody td {
+        .table td {
             padding: 1rem;
             vertical-align: middle;
-            border-bottom: 1px solid #e2e8f0;
         }
 
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f8fafc;
-        }
-
-        /* Product image styles */
-        .product-image {
+        .table img {
             width: 50px;
             height: 50px;
             object-fit: cover;
-            border-radius: 0.375rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            transition: transform 0.2s;
         }
 
-        /* Card styles */
-        .card {
-            border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 0.5rem;
-            margin-bottom: 2rem;
+        .table img:hover {
+            transform: scale(1.1);
         }
 
-        .card-header {
-            background-color: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 1rem 1.5rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .depot-title {
-            color: #1e293b;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            padding: 0 0.5rem;
-        }
-
-        /* Layout styles */
-        #layoutSidenav_content {
-            flex: 1;
-            padding: 1.5rem;
-            background-color: #f1f5f9;
-        }
-
-        /* Responsive adjustments */
+        /* Responsive */
         @media (max-width: 768px) {
-            .table-container {
-                overflow-x: auto;
+            .vertical-nav {
+                transform: translateX(-100%);
             }
-            
-            .table {
-                min-width: 800px;
+
+            .vertical-nav.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .nav-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1001;
             }
         }
-        /* Table styles */
-.table-container {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 5rem 0;
-    overflow: hidden;
-}
-
-.table {
-    margin-bottom: 0;
-    width: 100%; /* La table occupera toute la largeur disponible */
-    table-layout: fixed; /* Assurez-vous que les colonnes sont bien espacées */
-}
-
-.table thead th {
-    background-color: #f8fafc;
-    border-bottom: 2px solid #e2e8f0;
-    color: #1e293b;
-    font-weight: 600;
-    padding: 1rem;
-    white-space: nowrap;
-}
-
-.table tbody td {
-    padding: 1.5rem;
-    vertical-align: middle;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.table tbody tr:hover {
-    background-color: #f8fafc;
-}
-
-/* Ajoutez un peu plus d'espace autour de la table */
-.container {
-    max-width: 200%; /* Pour que la table occupe tout l'espace disponible */
-    padding-left: 2rem;
-    padding-right: 2rem;
-}
-
     </style>
 </head>
-<body class="sb-nav-fixed">
-    <!-- Top Navigation-->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark">
-        <a class="navbar-brand ps-3" href="#">Start Bootstrap</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-    
-    <div id="layoutSidenav">
-        <!-- Sidebar Navigation-->
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-tachometer-alt me-2"></i>
-                            Dashboard
-                        </a>
-                        
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-columns me-2"></i>
-                            Layouts
-                        </a>
-                        
-                        <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-chart-area me-2"></i>
-                            Charts
-                        </a>
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-table me-2"></i>
-                            Tables
-                        </a>
-                    </div>
-                </div>
-            </nav>
+<body>
+    <!-- Navigation Toggle Button (Mobile) -->
+    <button class="btn btn-dark nav-toggle d-md-none">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Navigation Verticale -->
+    <nav class="vertical-nav">
+        <div class="site-title">
+            <i class="fas fa-store me-2"></i>
+            TR STORE
         </div>
 
-        <!-- Main Content-->
-        <div id="layoutSidenav_content">
-                    <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card">
-                    <div class="container">
-            <h2>Dépôt: {{ $depot->nom }}</h2>
-            
+        <ul class="nav-menu">
+            <!-- Core -->
+            <li class="nav-section">Core</li>
+            <li class="nav-item">
+                <a href="/" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <!-- Produits -->
+            <li class="nav-section">Produits</li>
+            <li class="nav-item">
+                <a href="/ajouterproduit" class="nav-link">
+                    <i class="fas fa-plus"></i>
+                    Ajouter Produit
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/index" class="nav-link">
+                    <i class="fas fa-list"></i>
+                    Liste des produits
+                </a>
+            </li>
+
+            <!-- Dépôts -->
+            <li class="nav-section">Dépôts</li>
+            <li class="nav-item">
+                <a href="/indexdepot" class="nav-link">
+                    <i class="fas fa-warehouse"></i>
+                    Gestion des dépôts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/produit-depot/create" class="nav-link">
+                    <i class="fas fa-plus-circle"></i>
+                    Associer Produit-Dépôt
+                </a>
+            </li>
+
+            <!-- Administration -->
+            <li class="nav-section">Administration</li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-user-cog"></i>
+                    Paramètres
+                </a>
+            </li>
+            <li class="nav-item">
+                <form method="POST" action="{{ route('logout') }}" class="nav-link">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-white p-0">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Déconnexion
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenu Principal -->
+    <main class="main-content">
+        <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    Produits dans ce dépôt
+                    <h2 class="mb-0">Dépôt: {{ $depot->nom }}</h2>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Titre</th>
-                                <th>Description</th>
-                                <th>Quantité</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($produits_depot as $produit)
-                            <tr>
-                                <td>
-                                    <img src="{{ asset('storage/' . $produit->image) }}" 
-                                        alt="{{ $produit->titre }}" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>{{ $produit->titre }}</td>
-                                <td>{{ $produit->description }}</td>
-                                <td>{{ $produit->quantite }}</td>
-                                
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> 
-            </div>
-        </div>
-    </div>
-</div>
-            
-            <footer class="bg-light mt-auto py-4">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#" class="text-decoration-none">Privacy Policy</a>
-                            &middot;
-                            <a href="#" class="text-decoration-none">Terms &amp; Conditions</a>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Titre</th>
+                                    <th>Description</th>
+                                    <th>Quantité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($produits_depot as $produit)
+                                <tr>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $produit->image) }}" 
+                                             alt="{{ $produit->titre }}">
+                                    </td>
+                                    <td>{{ $produit->titre }}</td>
+                                    <td>{{ $produit->description }}</td>
+                                    <td>{{ $produit->quantite }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </footer>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle menu on mobile
+        document.querySelector('.nav-toggle').addEventListener('click', function() {
+            document.querySelector('.vertical-nav').classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

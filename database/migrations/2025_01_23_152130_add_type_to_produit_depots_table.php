@@ -10,7 +10,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('produit_depots', function (Blueprint $table) {
-            $table->enum('type', ['addition', 'soustraction'])->nullable();
+            $table->enum('type', ['addition', 'soustraction'])->nullable(); //default
         });
     }
 

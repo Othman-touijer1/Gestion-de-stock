@@ -10,6 +10,8 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
         
         <style>
             /* Variables pour les couleurs */
@@ -363,6 +365,104 @@
             padding: 1rem !important;
           }
         }
+         :root {
+        --primary: #4f46e5;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --sidebar-width: 250px;
+    }
+
+    /* Navigation verticale */
+    .vertical-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--sidebar-width);
+        height: 100vh;
+        background: linear-gradient(180deg, var(--dark), #2d3748);
+        padding-top: 3.5rem;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+
+    /* Logo et titre */
+    .site-title {
+        color: white;
+        font-size: 1.5rem;
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 1rem;
+    }
+
+    /* Menu items */
+    .nav-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-item {
+        margin: 0.5rem 0;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        color: rgba(255,255,255,0.8) !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background: rgba(255,255,255,0.1);
+        color: white !important;
+        padding-left: 2rem;
+    }
+
+    .nav-link i {
+        width: 20px;
+        margin-right: 10px;
+    }
+
+    /* Séparateurs de sections */
+    .nav-section {
+        color: var(--primary);
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 1.5rem 1.5rem 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .vertical-nav {
+            transform: translateX(-100%);
+        }
+
+        .vertical-nav.active {
+            transform: translateX(0);
+        }
+
+        .nav-toggle {
+            display: block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+        }
+    }
+    .modal-backdrop {
+    animation: backdropFadeIn 1s ease-out;
+    }
+
+    @keyframes backdropFadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 0.5; }
+    }
+
         </style>
     </head>
     <body class="sb-nav-fixed">
@@ -404,7 +504,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="/">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -456,7 +556,7 @@
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
                                             <a class="nav-link" href="/historique">Historique</a>
-                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="/indexF">Factures</a>
                                             <a class="nav-link" href="500.html">500 Page</a>
                                         </nav>
                                     </div>
@@ -545,36 +645,37 @@
                         </div>
                     </div>
                     <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Détails du Produit</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="text-center mb-3">
-                                    <img id="produitImage" src="" alt="Image du produit" class="img-fluid rounded shadow" style="max-height: 250px;">
-                                </div>
-                                <h5 id="produitTitre" class="text-center mb-3"></h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Dépôt</th>
-                                                <th>Quantité</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="depotsQuantites">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="modal-dialog">
+        <div class="modal-content animate__animated animate__fadeIn">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails du Produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <img id="produitImage" src="" alt="Image du produit" class="img-fluid rounded shadow animate__animated animate__fadeIn" style="max-height: 250px;">
                 </div>
+                <h5 id="produitTitre" class="text-center mb-3 animate__animated animate__fadeIn"></h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped animate__animated animate__fadeIn">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Dépôt</th>
+                                <th>Quantité</th>
+                            </tr>
+                        </thead>
+                        <tbody id="depotsQuantites">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">

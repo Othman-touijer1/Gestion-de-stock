@@ -81,8 +81,6 @@ class HomeController extends Controller
 
         return redirect('/index')->with('success', 'Produit supprimé avec succès!');
     } 
-
-
     
     public function viewProduit($id)
     {

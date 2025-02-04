@@ -16,7 +16,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(ProduitDepot::class);
     }
-
+    public function historiques()
+    {
+        return $this->hasMany(Historique::class, 'user_id');
+    }
     /**
      * The attributes that are mass assignable.
      *

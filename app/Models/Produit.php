@@ -32,5 +32,8 @@ class Produit extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+    public function historiques()
+    {
+        return $this->hasMany(Historique::class, 'produit_id');
+    }
 }

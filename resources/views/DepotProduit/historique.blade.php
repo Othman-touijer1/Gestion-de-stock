@@ -490,7 +490,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="/">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -580,23 +580,23 @@
                         <table id="datatablesSimple">
                             <thead>
                                 <tr>
-                                    <th>Utilisateur</th>
                                     <th>Produit</th>
-                                    <th>Depot</th>
+                                    <th>Dépot</th>
                                     <th>Quantité</th>
                                     <th>Type</th>
-                                    <th>Heure</th>
+                                    <th>Date</th>
+                                    <th>Utilisateur</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($produitsDepots as $produitDepot)
+                                @foreach($historiques as $historique)
                                     <tr>
-                                        <td>{{ optional($produitDepot->user)->name ?? 'Utilisateur inconnu' }}</td>
-                                        <td>{{ $produitDepot->produit ? $produitDepot->produit->titre : 'Produit inconnu' }}</td>
-                                        <td>{{ $produitDepot->depot ? $produitDepot->depot->nom : 'Dépôt inconnu' }}</td>
-                                        <td>{{ $produitDepot->quantite }}</td>
-                                        <td>{{ $produitDepot->type}}</td>
-                                        <td>{{ $produitDepot->created_at->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $historique->produit->nom }}</td>
+                                        <td>{{ $historique->depot->nom }}</td>
+                                        <td>{{ $historique->quantite }}</td>
+                                        <td>{{ ucfirst($historique->type) }}</td>
+                                        <td>{{ $historique->created_at }}</td>
+                                        <td>{{ $historique->user->name }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

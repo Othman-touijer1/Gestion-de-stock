@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DepotController;
 use App\Http\Controllers\ProduitDepotController;
-
+use App\Http\Controllers\FactureController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,9 +33,6 @@ Route::post('/modifier_produit/{id}', [HomeController::class, 'update']);
 Route::post('/supprimer_produit/{id}', [HomeController::class, 'destroy']);
 Route::get('/view_produit/{id}', [HomeController::class, 'viewProduit'])->name('view.produit');
 
-
-
-
 //DEPOTS
 Route::get('/indexdepot', [DepotController::class, 'indexdepot']);
 Route::get('/depots/create', [DepotController::class, 'craetedepot'])->name('depots.create');
@@ -53,7 +50,9 @@ Route::post('/destroy_depotproduit/{id}', [ProduitDepotController::class, 'destr
 
 
 
-
+//FACTURES
+Route::get('indexF', [FactureController::class, 'index']);
+Route::get('devis', [FactureController::class, 'devis']);
 
 
 

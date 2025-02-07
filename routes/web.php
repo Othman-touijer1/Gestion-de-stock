@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DepotController;
 use App\Http\Controllers\ProduitDepotController;
 use App\Http\Controllers\FactureController;
+use App\Http\Controllers\ClientController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,8 +52,16 @@ Route::post('/destroy_depotproduit/{id}', [ProduitDepotController::class, 'destr
 
 
 //FACTURES
-Route::get('indexF', [FactureController::class, 'index']);
-Route::get('devis', [FactureController::class, 'devis']);
+Route::get('/indexF', [FactureController::class, 'index']);
+// Route::get('devis', [FactureController::class, 'devis']);
+
+//CLIENTS
+
+Route::get('/indexC', [ClientController::class, 'index'])->name('clients.index');
+Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+Route::get('/clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+Route::put('/clients/{id}', [ClientController::class, 'update'])->name('clients.update');
+Route::delete('/clients/{id}', [ClientController::class, 'destroy'])->name('clients.destroy');
 
 
 

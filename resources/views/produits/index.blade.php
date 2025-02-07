@@ -509,7 +509,7 @@
                                             <td>{{ $produit->description }}</td>
                                             <td>{{ $produit->categorie }}</td>
                                             <td>
-                                                <a href="/modifier_produit/{{ $produit->id }}" class="btn btn-warning">Modifier</a>
+                                                <a href="/modifier_produit/{{ $produit->id }}" class="btn btn-warning"">Modifier</a>
                                                 <form action="/supprimer_produit/{{ $produit->id }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger">Supprimer</button>

@@ -557,17 +557,10 @@
                                         <nav class="sb-sidenav-menu-nested nav">
                                             <a class="nav-link" href="/historique">Historique</a>
                                             <a class="nav-link" href="/indexF">Factures</a>
-                                            <a class="nav-link" href="500.html">500 Page</a>
+                                            <a class="nav-link" href="/indexC">Clients</a>
                                         </nav>
                                     </div>
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <!-- <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">Casablanca</a>
-                                            <a class="nav-link" href="404.html">Rabat</a>
-                                            <a class="nav-link" href="500.html">Tanger</a>
-                                            <a class="nav-link" href="">Marrakech</a>
-                                        </nav> -->
-                                    </div>
+                                    
                                 </nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Addons</div>
@@ -645,36 +638,36 @@
                         </div>
                     </div>
                     <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animate__animated animate__fadeIn">
-            <div class="modal-header">
-                <h5 class="modal-title">Détails du Produit</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-3">
-                    <img id="produitImage" src="" alt="Image du produit" class="img-fluid rounded shadow animate__animated animate__fadeIn" style="max-height: 250px;">
+                    <div class="modal-dialog">
+                        <div class="modal-content animate__animated animate__fadeIn">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Détails du Produit</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-3">
+                                    <img id="produitImage" src="" alt="Image du produit" class="img-fluid rounded shadow animate__animated animate__fadeIn" style="max-height: 250px;">
+                                </div>
+                                <h5 id="produitTitre" class="text-center mb-3 animate__animated animate__fadeIn"></h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped animate__animated animate__fadeIn">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Dépôt</th>
+                                                <th>Quantité</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="depotsQuantites">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h5 id="produitTitre" class="text-center mb-3 animate__animated animate__fadeIn"></h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped animate__animated animate__fadeIn">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Dépôt</th>
-                                <th>Quantité</th>
-                            </tr>
-                        </thead>
-                        <tbody id="depotsQuantites">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
 
                 </main>
                 <footer class="py-4 bg-light mt-auto">

@@ -556,7 +556,7 @@
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
                                             <a class="nav-link" href="/historique">Historique</a>
-                                            <a class="nav-link" href="/indexF">Factures</a>
+                                            <a class="nav-link" href="/factures">Factures</a>
                                             <a class="nav-link" href="/indexC">Clients</a>
                                         </nav>
                                     </div>

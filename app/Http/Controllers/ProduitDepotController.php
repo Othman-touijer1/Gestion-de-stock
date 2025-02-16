@@ -117,6 +117,7 @@ class ProduitDepotController extends Controller
 
     public function historique()
     {
+        $produits =Produit::all();
         $historiques = Historique::with('produit', 'depot', 'user')->get();
         return view('DepotProduit.historique', compact('historiques'));
     }

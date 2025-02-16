@@ -52,9 +52,9 @@ Route::post('/destroy_depotproduit/{id}', [ProduitDepotController::class, 'destr
 
 
 //FACTURES
-Route::get('/indexF', [FactureController::class, 'index']);
-// Route::get('devis', [FactureController::class, 'devis']);
-
+Route::get('/factures', [FactureController::class, 'index'])->name('factures.index');
+Route::get('/factures/create', [FactureController::class, 'create'])->name('factures.create');
+Route::post('/factures', [FactureController::class, 'store'])->name('factures.store');
 //CLIENTS
 
 Route::get('/indexC', [ClientController::class, 'index'])->name('clients.index');

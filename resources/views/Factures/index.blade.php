@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="author" content="" />
         <title>TR STORE</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
@@ -129,29 +130,6 @@
         transform: scale(1.1);
         }
 
-        /* Footer */
-        footer {
-        background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
-        }
-
-        /* Boutons et liens */
-        .btn, .nav-link {
-        position: relative;
-        overflow: hidden;
-        }
-
-        .btn::after, .nav-link::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-        }
 
         .btn:hover::after, .nav-link:hover::after {
         width: 200px;
@@ -388,6 +366,7 @@
             line-height: 1.6;
             margin-top:80px;
             margin-left:70px;
+            
         }
 
         .container {
@@ -451,7 +430,7 @@
 
         th {
             background-color: var(--primary-color);
-            color: white;
+            color: black;
             padding: 1rem;
             text-align: left;
         }
@@ -531,13 +510,158 @@
                 overflow-x: auto;
             }
         }
+         /* Existing styles... */
+            
+            /* Centralization styles */
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 1rem;
+                margin-right:700px;
+                margin-left:300px;
+                margin-top:100px;
+                margin-bottom:500px;
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .actions-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 1rem;
+            }
 
         @keyframes backdropFadeIn {
             0% { opacity: 0; }
             100% { opacity: 0.5; }
         }
-        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            margin-top:40px;
+            margin-left:100px;
+            
+        }
 
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 8px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .line-items {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .line-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.5fr;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .line-header {
+            font-weight: bold;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-add {
+            margin-top: 10px;
+        }
+
+        .delete-line {
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+        }
+         
         </style>
     </head>
     <body class="sb-nav-fixed">
@@ -658,220 +782,494 @@
                     </div>
                 </nav>
             </div>
+            <main>
             <div class="container">
-        <div class="form-header">
-            <h1>Nouvelle Facture</h1>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Liste des Factures</h1>
+                    <!-- <a href="{{ route('factures.create') }}" class="btn btn-primary">Nouvelle Facture</a> -->
+                </div>
+
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Total HT</th>
+                            <th>Total TVA</th>
+                            <th>Total TTC</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($factures as $facture)
+                        <tr>
+                            <td>{{ $facture->numero_facture }}</td>
+                            <td>{{ $facture->date_facture}}</td>
+                            <td>{{ $facture->client }}</td>
+                            <td>{{ number_format($facture->total_ht, 2) }} €</td>
+                            <td>{{ number_format($facture->total_tva, 2) }} €</td>
+                            <td>{{ number_format($facture->total_ttc, 2) }} €</td>
+                            <td>
+                                <a href="" class="btn btn-sm btn-info">Voir</a>
+                                <a href="" class="btn btn-sm btn-warning">Modifier</a>
+                                <form action="" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <button onclick="openModal()" class="btn btn-primary">Nouvelle Facture</button>
+            </div>
+            </main>
+            <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Nouvelle Facture</h2>
+            
+            <form action="{{ route('factures.store') }}" method="POST" id="invoiceForm">
+                @csrf
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Numéro de Facture</label>
+                        <input type="text" name="numero_facture" id="invoice-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" name="date_facture" id="invoice-date" required>
+                    </div>
+                </div>
+                <input type="hidden" name="total_ht" id="total-ht-input">
+                <input type="hidden" name="total_tva" id="total-tva-input">
+                <input type="hidden" name="total_ttc" id="total-ttc-input">
+                
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Société</label>
+                        <input type="text" name="societe" id="company-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse</label>
+                        <input type="text" name="adresse" id="company-address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" name="telephone" id="company-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse du client</label>
+                        <input type="text" name="adresse_client" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client">Client</label>
+                        <select name="client" id="client" class="form-control" required>
+                            <option value="">Sélectionnez un client</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->entreprise }}">{{ $client->entreprise }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <table id="invoice-items">
+                    <thead>
+                        <tr>
+                            <th>Désignation</th>
+                            <th>Produit</th>
+                            <th>Prix HT</th>
+                            <th>Quantité</th>
+                            <th>TVA (%)</th>
+                            <th>Remise (%)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-items-body">
+                        <tr>
+                            <td>
+                                <input type="text" name="lignes[0][designation]" required>
+                            </td>
+                            <td>
+                                <select name="lignes[0][produit_id]" class="product-select form-control" required>
+                                    <option value="">Sélectionnez un produit</option>
+                                    @foreach($produits as $produit)
+                                        <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}">
+                                            {{ $produit->nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" name="lignes[0][prix_ht]" class="prix-ht" step="0.01" required>
+                            </td>
+                            <td>
+                                <input type="number" name="lignes[0][quantite]" class="quantite" required>
+                            </td>
+                            <td>
+                                <input type="number" name="lignes[0][tva]" class="tva" step="0.01" required>
+                            </td>
+                            <td>
+                                <input type="number" name="lignes[0][remise]" class="remise" step="0.01" value="0">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                            </td>
+                            <input type="hidden" name="total_ht" id="total-ht-input">
+                            <input type="hidden" name="total_tva" id="total-tva-input">
+                            <input type="hidden" name="total_ttc" id="total-ttc-input">
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" id="add-row" class="btn btn-primary mt-3">
+                    Ajouter une ligne
+                </button>
+                
+                <div class="totals mt-4">
+                    <div class="total-row">
+                        <span>Total HT</span>
+                        <span id="total-ht">0.00 €</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Total TVA</span>
+                        <span id="total-tva">0.00 €</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Total TTC</span>
+                        <span id="total-ttc">0.00 €</span>
+                    </div>
+                </div>
+
+                <div class="actions mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        Enregistrer
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">
+                        Réinitialiser
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <form id="invoice-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Numéro de Facture</label>
-                    <input type="text" id="invoice-number" required>
-                </div>
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="invoice-date" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Société</label>
-                    <input type="text" id="company-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Adrésse</label>
-                    <input type="text" id="company-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Télé</label>
-                    <input type="number" id="company-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Adrésse de client</label>
-                    <input type="text" id="company-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="client">Client</label>
-                    <select name="produit_id" id="produit_id" class="form-control @error('produit_id') is-invalid @enderror" required>
-                                <option value="">Séléctionez un client</option>
-                                @foreach($clients as $client)
-                                    <option value="{{ $client->entreprise }}">{{ $client->entreprise }}</option>
-                                @endforeach
-                    </select>
-                </div>
-            </div>
-            <table id="invoice-items">
-                <thead>
-                    <tr>
-                        <th>Désignation</th>
-                        <th>Produit</th>
-                        <th>Prix HT</th>
-                        <th>Quantité</th>
-                        <th>TVA (%)</th>
-                        <th>Remise (%)</th>
-                        <th>Total HT</th>
-                        <th>Total TTC</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
-
-            <button type="button" id="add-row" class="btn btn-primary">
-                Ajouter une ligne
-            </button>
-             
-            <div class="totals">
-                <div class="total-row">
-                    <span>Total HT</span>
-                    <span id="total-ht">0.00 €</span>
-                </div>
-                <div class="total-row">
-                    <span>Total TVA</span>
-                    <span id="total-tva">0.00 €</span>
-                </div>
-                <div class="total-row">
-                    <span>Total TTC</span>
-                    <span id="total-ttc">0.00 €</span>
-                </div>
-            </div>
-
-            <div class="actions">
-                <button type="button" class="btn btn-primary" onclick="saveInvoice()">
-                    Enregistrer
-                </button>
-                <button type="button" class="btn btn-danger" onclick="resetForm()">
-                    Réinitialiser
-                </button>
-            </div>
-        </form>
     </div>
-
-                </main>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
-        <script>
-        let itemRows = [];
-
-        function createNewRow() {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><input type="text" class="table-input designation" required></td>
-                <div class="form-group mb-3" style="margin-top:15px;">
-                        
-                            <select name="produit_id" id="produit_id" class="form-control @error('produit_id') is-invalid @enderror" required>
-                                <option value=""></option>
-                                @foreach($produits as $produit)
-                                    <option value="{{ $produit->id }}">{{ $produit->titre }}</option>
-                                @endforeach
-                            </select>
-                            @error('produit_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                <td><input type="number" class="table-input price" min="0" step="0.01" required></td>
-                <td><input type="number" class="table-input quantity" min="1" value="1" required></td>
-                <td><input type="number" class="table-input tva" min="0" max="100" value="20" required></td>
-                <td><input type="number" class="table-input discount" min="0" max="100" value="0" required></td>
-                <td class="total-ht">0.00</td>
-                <td class="total-ttc">0.00</td>
-                <td>
-                    <button type="button" class="btn btn-danger" onclick="removeRow(this)">❌</button>
-                </td>
-            `;
-
-            // Ajouter les écouteurs d'événements aux inputs
-            const inputs = row.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => calculateRowTotal(row));
-            });
-
-            return row;
-        }
-
-        function calculateRowTotal(row) {
-            const price = parseFloat(row.querySelector('.price').value) || 0;
-            const quantity = parseInt(row.querySelector('.quantity').value) || 0;
-            const tva = parseFloat(row.querySelector('.tva').value) || 0;
-            const discount = parseFloat(row.querySelector('.discount').value) || 0;
-
-            const totalHT = price * quantity * (1 - discount / 100);
-            const totalTVA = totalHT * (tva / 100);
-            const totalTTC = totalHT + totalTVA;
-
-            row.querySelector('.total-ht').textContent = totalHT.toFixed(2);
-            row.querySelector('.total-ttc').textContent = totalTTC.toFixed(2);
-
-            calculateGlobalTotals();
-        }
-
-        function calculateGlobalTotals() {
-            let globalTotalHT = 0;
-            let globalTotalTVA = 0;
-            let globalTotalTTC = 0;
-
-            document.querySelectorAll('#invoice-items tbody tr').forEach(row => {
-                const totalHT = parseFloat(row.querySelector('.total-ht').textContent);
-                const totalTTC = parseFloat(row.querySelector('.total-ttc').textContent);
-                const totalTVA = totalTTC - totalHT;
-
-                globalTotalHT += totalHT;
-                globalTotalTVA += totalTVA;
-                globalTotalTTC += totalTTC;
-            });
-
-            document.getElementById('total-ht').textContent = globalTotalHT.toFixed(2) + ' €';
-            document.getElementById('total-tva').textContent = globalTotalTVA.toFixed(2) + ' €';
-            document.getElementById('total-ttc').textContent = globalTotalTTC.toFixed(2) + ' €';
-        }
-
-        function addRow() {
-            const tbody = document.querySelector('#invoice-items tbody');
-            const newRow = createNewRow();
-            tbody.appendChild(newRow);
-            calculateGlobalTotals();
-        }
-
-        function removeRow(button) {
-            const tbody = document.querySelector('#invoice-items tbody');
-            if (tbody.children.length > 1) {
-                button.closest('tr').remove();
-                calculateGlobalTotals();
-            }
-        }
-
-        function saveInvoice() {
-            // Ici vous pouvez ajouter la logique pour sauvegarder la facture
-            alert('Facture sauvegardée avec succès!');
-        }
-
-        function resetForm() {
-            if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire ?')) {
-                document.getElementById('invoice-form').reset();
-                const tbody = document.querySelector('#invoice-items tbody');
-                tbody.innerHTML = '';
-                addRow();
-                calculateGlobalTotals();
-            }
-        }
-
-        // Initialisation du formulaire
-        document.getElementById('add-row').addEventListener('click', addRow);
-        document.getElementById('invoice-date').valueAsDate = new Date();
-        addRow(); // Ajouter la première ligne au chargement
-    </script>
+</div>
     </body>
 </html>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tbody = document.getElementById('invoice-items-body');
+            
+            // Gestionnaire d'événements pour la sélection des produits
+            document.body.addEventListener('change', function(event) {
+                if (event.target.classList.contains('product-select')) {
+                    const row = event.target.closest('tr');
+                    const prixInput = row.querySelector('.prix-ht');
+                    const selectedOption = event.target.selectedOptions[0];
+                    const prix = selectedOption.dataset.prix;
+                    
+                    if (prix) {
+                        prixInput.value = prix;
+                        updateTotals();
+                    }
+                }
+            });
+
+            // Fonction pour mettre à jour tous les totaux
+            function updateTotals() {
+                let totalHt = 0;
+                let totalTva = 0;
+                let totalTtc = 0;
+
+                const rows = document.querySelectorAll('#invoice-items-body tr');
+                rows.forEach(row => {
+                    const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
+                    const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
+                    const tva = parseFloat(row.querySelector('.tva').value) || 0;
+                    const remise = parseFloat(row.querySelector('.remise').value) || 0;
+
+                    const montantHt = prixHt * quantite;
+                    const montantTva = montantHt * (tva / 100);
+                    const montantTtc = montantHt + montantTva - (montantHt * (remise / 100));
+
+                    totalHt += montantHt;
+                    totalTva += montantTva;
+                    totalTtc += montantTtc;
+                });
+
+                // Mettre à jour les champs cachés
+                document.getElementById('total-ht-input').value = totalHt.toFixed(2);
+                document.getElementById('total-tva-input').value = totalTva.toFixed(2);
+                document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
+            }
+
+            // Appeler updateTotals() avant la soumission du formulaire
+            document.getElementById('invoiceForm').addEventListener('submit', function() {
+                updateTotals();
+            });
+            
+
+            // Gestion de la sélection des produits
+            // tbody.addEventListener('change', function(event) {
+            //     if (event.target.classList.contains('product-select')) {
+            //         const row = event.target.closest('tr');
+            //         const prixInput = row.querySelector('.prix-ht');
+            //         const selectedOption = event.target.options[event.target.selectedIndex];
+            //         const prix = selectedOption.getAttribute('data-prix');
+                    
+            //         if (prix) {
+            //             prixInput.value = prix;
+            //             updateTotals();
+            //         }
+            //     }
+            // });
+
+            // Mise à jour des totaux lors de la modification des inputs
+            tbody.addEventListener('input', function(event) {
+                if (event.target.matches('.prix-ht, .quantite, .tva, .remise')) {
+                    updateTotals();
+                }
+            });
+           // Updated form submission handling
+document.addEventListener('DOMContentLoaded', function() {
+    const invoiceForm = document.getElementById('invoiceForm');
+    const tbody = document.getElementById('invoice-items-body');
+
+    // Main form submission handler
+    invoiceForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        
+        // Update totals before submission
+        updateTotals();
+        
+        // Get all form data
+        const formData = new FormData(invoiceForm);
+        
+        // Validate required fields
+        if (!validateForm()) {
+            alert('Veuillez remplir tous les champs obligatoires');
+            return;
+        }
+
+        // Send AJAX request
+        fetch(invoiceForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Facture créée avec succès');
+                window.location.href = '/factures'; // Redirect to invoices list
+            } else {
+                alert('Erreur lors de la création de la facture: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Une erreur est survenue lors de la création de la facture');
+        });
+    });
+
+    // Form validation function
+    function validateForm() {
+        // Basic required fields
+        const requiredFields = [
+            'numero_facture',
+            'date_facture',
+            'societe',
+            'adresse',
+            'telephone',
+            'adresse_client',
+            'client'
+        ];
+
+        for (let field of requiredFields) {
+            const input = invoiceForm.querySelector(`[name="${field}"]`);
+            if (!input.value.trim()) {
+                input.focus();
+                return false;
+            }
+        }
+
+        // Validate line items
+        const rows = tbody.querySelectorAll('tr');
+        for (let row of rows) {
+            const designation = row.querySelector('[name^="lignes"][name$="[designation]"]');
+            const produitId = row.querySelector('[name^="lignes"][name$="[produit_id]"]');
+            const prixHt = row.querySelector('[name^="lignes"][name$="[prix_ht]"]');
+            const quantite = row.querySelector('[name^="lignes"][name$="[quantite]"]');
+            const tva = row.querySelector('[name^="lignes"][name$="[tva]"]');
+
+            if (!designation.value.trim() || !produitId.value || !prixHt.value || !quantite.value || !tva.value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Enhanced updateTotals function
+    function updateTotals() {
+        let totalHt = 0;
+        let totalTva = 0;
+        let totalTtc = 0;
+
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
+            const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
+            const tva = parseFloat(row.querySelector('.tva').value) || 0;
+            const remise = parseFloat(row.querySelector('.remise').value) || 0;
+
+            const montantHt = prixHt * quantite;
+            const montantRemise = montantHt * (remise / 100);
+            const htApresRemise = montantHt - montantRemise;
+            const montantTva = htApresRemise * (tva / 100);
+
+            totalHt += htApresRemise;
+            totalTva += montantTva;
+        });
+
+        totalTtc = totalHt + totalTva;
+
+        // Update display
+        document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
+        document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
+        document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
+
+        // Update hidden inputs
+        document.getElementById('total-ht-input').value = totalHt.toFixed(2);
+        document.getElementById('total-tva-input').value = totalTva.toFixed(2);
+        document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
+    }
+});
+            // Ajout d'une nouvelle ligne
+            document.getElementById('add-row').addEventListener('click', function() {
+                const rowCount = tbody.children.length;
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>
+                        <input type="text" name="lignes[${rowCount}][designation]" class="form-control" required>
+                    </td>
+                    <td>
+                        <select name="lignes[${rowCount}][produit_id]" class="product-select form-control" required>
+                            <option value="">Sélectionnez un produit</option>
+                            @foreach($produits as $produit)
+                                <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}">
+                                    {{ $produit->nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="lignes[${rowCount}][prix_ht]" class="prix-ht form-control" step="0.01" required>
+                    </td>
+                    <td>
+                        <input type="number" name="lignes[${rowCount}][quantite]" class="quantite form-control" required>
+                    </td>
+                    <td>
+                        <input type="number" name="lignes[${rowCount}][tva]" class="tva form-control" step="0.01" required>
+                    </td>
+                    <td>
+                        <input type="number" name="lignes[${rowCount}][remise]" class="remise form-control" step="0.01" value="0">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                    </td>
+                `;
+                tbody.appendChild(newRow);
+            });
+            function updateTotals() {
+    let totalHt = 0;
+    let totalTva = 0;
+    let totalTtc = 0;
+
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+        const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
+        const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
+        const tva = parseFloat(row.querySelector('.tva').value) || 0;
+        const remise = parseFloat(row.querySelector('.remise').value) || 0;
+
+        const montantHt = prixHt * quantite;
+        const montantRemise = montantHt * (remise / 100);
+        const htApresRemise = montantHt - montantRemise;
+        const montantTva = htApresRemise * (tva / 100);
+
+        totalHt += htApresRemise;
+        totalTva += montantTva;
+    });
+
+    totalTtc = totalHt + totalTva;
+
+    // Mettre à jour les champs cachés
+    document.getElementById('total-ht-input').value = totalHt.toFixed(2);
+    document.getElementById('total-tva-input').value = totalTva.toFixed(2);
+    document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
+
+    // Mettre à jour l'affichage
+    document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
+    document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
+    document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
+}
+            // Fonctions pour le modal
+            window.openModal = function() {
+                document.getElementById('invoiceModal').style.display = 'block';
+            }
+
+            window.closeModal = function() {
+                document.getElementById('invoiceModal').style.display = 'none';
+            }
+
+            window.resetForm = function() {
+                if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire ?')) {
+                    document.getElementById('invoiceForm').reset();
+                    while (tbody.children.length > 1) {
+                        tbody.removeChild(tbody.lastChild);
+                    }
+                    updateTotals();
+                }
+            }
+
+            // Fermeture du modal en cliquant à l'extérieur
+            window.onclick = function(event) {
+                const modal = document.getElementById('invoiceModal');
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            // Initialisation des totaux
+            updateTotals();
+            tbody.addEventListener('change', function(event) {
+                if (event.target.classList.contains('product-select')) {
+                    const row = event.target.closest('tr');
+                    const prixInput = row.querySelector('.prix-ht');
+                    const selectedOption = event.target.options[event.target.selectedIndex];
+                    const prix = selectedOption.getAttribute('data-prix');
+                    
+                    if (prix) {
+                        prixInput.value = prix;
+                        updateTotals();
+                    }
+                }
+            });
+        });
+        // Fonction pour calculer les totaux de la facture
+
+    </script>

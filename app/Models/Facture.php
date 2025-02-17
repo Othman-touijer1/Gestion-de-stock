@@ -22,8 +22,12 @@ class Facture extends Model
         'total_ttc',
     ];
 
-    public function lignesFacture()
+    public function lignfactures() // Assurez-vous que le nom correspond à celui utilisé dans votre requête
     {
-        return $this->hasMany(LignFacture::class);
+        return $this->hasMany(LignFacture::class, 'facture_id');
+    }
+    public function produit()
+    {
+        return $this->belongsTo(Produit::class);
     }
 }

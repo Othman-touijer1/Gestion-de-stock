@@ -800,6 +800,7 @@
                         <tr>
                             <th>Numéro</th>
                             <th>Date</th>
+                            <th>produit</th>
                             <th>Client</th>
                             <th>Total HT</th>
                             <th>Total TVA</th>
@@ -812,21 +813,24 @@
                         <tr>
                             <td>{{ $facture->numero_facture }}</td>
                             <td>{{ $facture->date_facture}}</td>
+                            @foreach($facture->lignFactures as $lignfacture)
+                            <td>{{ $lignfacture->produit->titre }}</td>
+                            @endforeach
                             <td>{{ $facture->client }}</td>
-                            <td>{{ number_format($facture->total_ht, 2) }} €</td>
-                            <td>{{ number_format($facture->total_tva, 2) }} €</td>
-                            <td>{{ number_format($facture->total_ttc, 2) }} €</td>
+                            <td>{{ number_format($facture->total_ht, 2) }} dh</td>
+                            <td>{{ number_format($facture->total_tva, 2) }} dh</td>
+                            <td>{{ number_format($facture->total_ttc, 2) }} dh</td>
                             <td>
-                                <a href="" class="btn btn-sm btn-info">Voir</a>
-                                <a href="" class="btn btn-sm btn-warning">Modifier</a>
-                                <form action="" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')">
-                                        Supprimer
-                                    </button>
-                                </form>
-                            </td>
+                            <a href="{{ route('factures.pdf', $facture->id) }}" class="btn btn-sm btn-info" target="_blank">PDF</a>
+                            <button onclick="openEditModal({{ $facture->id }})" class="btn btn-sm btn-warning">Modifier</button>
+                            <form action="{{ route('factures.destroy', $facture->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -963,6 +967,103 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+<div id="editInvoiceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Modifier Facture</h2>
+        
+        <form action="" method="POST" id="editInvoiceForm">
+            @csrf
+            @method('PUT')
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Numéro de Facture</label>
+                    <input type="text" name="numero_facture" id="edit-invoice-number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date_facture" id="edit-invoice-date" required>
+                </div>
+            </div>
+            <input type="hidden" name="total_ht" id="edit-total-ht-input">
+            <input type="hidden" name="total_tva" id="edit-total-tva-input">
+            <input type="hidden" name="total_ttc" id="edit-total-ttc-input">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Société</label>
+                    <input type="text" name="societe" id="edit-company-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <input type="text" name="adresse" id="edit-company-address" required>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="tel" name="telephone" id="edit-company-phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Adresse du client</label>
+                    <input type="text" name="adresse_client" id="edit-client-address" required>
+                </div>
+                <div class="form-group">
+                    <label for="client">Client</label>
+                    <select name="client" id="edit-client" class="form-control" required>
+                        <option value="">Sélectionnez un client</option>
+                        @foreach($clients as $client)
+                            <option value="{{ $client->entreprise }}">{{ $client->entreprise }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <table id="edit-invoice-items">
+                <thead>
+                    <tr>
+                        <th>Désignation</th>
+                        <th>Produit</th>
+                        <th>Prix HT</th>
+                        <th>Quantité</th>
+                        <th>TVA (%)</th>
+                        <th>Remise (%)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="edit-invoice-items-body">
+                    <!-- Invoice lines will be inserted here via JavaScript -->
+                </tbody>
+            </table>
+
+            <button type="button" id="edit-add-row" class="btn btn-primary mt-3">
+                Ajouter une ligne
+            </button>
+            
+            <div class="totals mt-4">
+                <div class="total-row">
+                    <span>Total HT</span>
+                    <span id="edit-total-ht">0.00 €</span>
+                </div>
+                <div class="total-row">
+                    <span>Total TVA</span>
+                    <span id="edit-total-tva">0.00 €</span>
+                </div>
+                <div class="total-row">
+                    <span>Total TTC</span>
+                    <span id="edit-total-ttc">0.00 €</span>
+                </div>
+            </div>
+
+            <div class="actions mt-4">
+                <button type="submit" class="btn btn-primary">
+                    Mettre à jour
+                </button>
+                <button type="button" class="btn btn-danger" onclick="closeEditModal()">
+                    Annuler
+                </button>
+            </div>
+        </form>
     </div>
 </div>
     </body>
@@ -1270,6 +1371,144 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        // Fonction pour calculer les totaux de la facture
+        // Open the edit invoice modal
+function openEditModal(id) {
+    // Set form action
+    document.getElementById('editInvoiceForm').action = '/factures/' + id;
+    
+    // Fetch invoice data and populate the form
+    fetch('/factures/' + id + '/edit')
+        .then(response => response.json())
+        .then(data => {
+            // Populate basic info
+            document.getElementById('edit-invoice-number').value = data.facture.numero_facture;
+            document.getElementById('edit-invoice-date').value = data.facture.date_facture;
+            document.getElementById('edit-company-name').value = data.facture.societe;
+            document.getElementById('edit-company-address').value = data.facture.adresse;
+            document.getElementById('edit-company-phone').value = data.facture.telephone;
+            document.getElementById('edit-client-address').value = data.facture.adresse_client;
+            document.getElementById('edit-client').value = data.facture.client;
+            
+            // Clear existing rows
+            const tbody = document.getElementById('edit-invoice-items-body');
+            tbody.innerHTML = '';
+            
+            // Populate invoice lines
+            data.lignes.forEach((ligne, index) => {
+                addEditInvoiceRow(index, ligne);
+            });
+            
+            // Update totals
+            updateEditTotals();
+        });
+    
+    // Show the modal
+    document.getElementById('editInvoiceModal').style.display = 'block';
+}
+
+// Close the edit invoice modal
+function closeEditModal() {
+    document.getElementById('editInvoiceModal').style.display = 'none';
+}
+
+// Add a row to the edit invoice form
+function addEditInvoiceRow(index, ligne = null) {
+    const tbody = document.getElementById('edit-invoice-items-body');
+    const row = document.createElement('tr');
+    
+    row.innerHTML = `
+        <td>
+            <input type="text" name="lignes[${index}][designation]" value="${ligne ? ligne.designation : ''}" required>
+        </td>
+        <td>
+            <select name="lignes[${index}][produit_id]" class="product-select form-control" required>
+                <option value="">Sélectionnez un produit</option>
+                @foreach($produits as $produit)
+                    <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}" ${ligne && ligne.produit_id == {{ $produit->id }} ? 'selected' : ''}>
+                        {{ $produit->titre }}
+                    </option>
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <input type="number" name="lignes[${index}][prix_ht]" value="${ligne ? ligne.prix_ht : ''}" class="prix-ht" step="0.01" required>
+        </td>
+        <td>
+            <input type="number" name="lignes[${index}][quantite]" value="${ligne ? ligne.quantite : ''}" class="quantite" required>
+        </td>
+        <td>
+            <input type="number" name="lignes[${index}][tva]" value="${ligne ? ligne.tva : ''}" class="tva" step="0.01" required>
+        </td>
+        <td>
+            <input type="number" name="lignes[${index}][remise]" value="${ligne ? ligne.remise : '0'}" class="remise" step="0.01">
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+        </td>
+    `;
+    
+    tbody.appendChild(row);
+    
+    // Add event listeners for this row
+    row.querySelector('.remove-row').addEventListener('click', function() {
+        row.remove();
+        updateEditTotals();
+    });
+    
+    row.querySelectorAll('.prix-ht, .quantite, .tva, .remise').forEach(input => {
+        input.addEventListener('change', updateEditTotals);
+    });
+    
+    // Product selection handler
+    row.querySelector('.product-select').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption && selectedOption.dataset.prix) {
+            row.querySelector('.prix-ht').value = selectedOption.dataset.prix;
+            updateEditTotals();
+        }
+    });
+}
+
+// Update the totals in the edit form
+function updateEditTotals() {
+    let totalHT = 0;
+    let totalTVA = 0;
+    let totalTTC = 0;
+    
+    const rows = document.querySelectorAll('#edit-invoice-items-body tr');
+    
+    rows.forEach(row => {
+        const prixHT = parseFloat(row.querySelector('.prix-ht').value) || 0;
+        const quantite = parseInt(row.querySelector('.quantite').value) || 0;
+        const tva = parseFloat(row.querySelector('.tva').value) || 0;
+        const remise = parseFloat(row.querySelector('.remise').value) || 0;
+        
+        const ligneHT = prixHT * quantite;
+        const ligneTVA = ligneHT * (tva / 100);
+        const ligneRemise = ligneHT * (remise / 100);
+        const ligneTTC = ligneHT + ligneTVA - ligneRemise;
+        
+        totalHT += ligneHT;
+        totalTVA += ligneTVA;
+        totalTTC += ligneTTC;
+    });
+    
+    document.getElementById('edit-total-ht').textContent = totalHT.toFixed(2) + ' €';
+    document.getElementById('edit-total-tva').textContent = totalTVA.toFixed(2) + ' €';
+    document.getElementById('edit-total-ttc').textContent = totalTTC.toFixed(2) + ' €';
+    
+    document.getElementById('edit-total-ht-input').value = totalHT.toFixed(2);
+    document.getElementById('edit-total-tva-input').value = totalTVA.toFixed(2);
+    document.getElementById('edit-total-ttc-input').value = totalTTC.toFixed(2);
+}
+
+// Initialize edit form event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Edit form "Add row" button
+    document.getElementById('edit-add-row').addEventListener('click', function() {
+        const rowCount = document.querySelectorAll('#edit-invoice-items-body tr').length;
+        addEditInvoiceRow(rowCount);
+    });
+});
 
     </script>

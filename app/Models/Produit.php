@@ -46,4 +46,10 @@ class Produit extends Model
     {
         return $this->belongsTo(Facture::class);
     }
+
+    public function lignfacture()
+    {
+        return $this->belongsTo(LignFacture::class);
+    }
+
 }

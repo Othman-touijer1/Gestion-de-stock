@@ -906,7 +906,7 @@
                                     <option value="">Sélectionnez un produit</option>
                                     @foreach($produits as $produit)
                                         <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}">
-                                            {{ $produit->nom }}
+                                            {{ $produit->titre }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -914,7 +914,7 @@
                             <td>
                                 <input type="number" name="lignes[0][prix_ht]" class="prix-ht" step="0.01" required>
                             </td>
-                            <td>
+                           <td>
                                 <input type="number" name="lignes[0][quantite]" class="quantite" required>
                             </td>
                             <td>

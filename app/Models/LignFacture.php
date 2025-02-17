@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class LignFacture extends Model
 {
+    protected $table = 'lignes_facture';
     use HasFactory;
 
     protected $fillable = [
         'facture_id',
         'designation',
+        'produit_id', // Use produit_id instead of produit
         'prix_ht',
         'quantite',
         'tva',

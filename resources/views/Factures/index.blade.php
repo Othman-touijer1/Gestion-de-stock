@@ -12,6 +12,9 @@
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="js/datatables-simple-demo.js"></script>
 
         
         <style>
@@ -661,7 +664,121 @@
             cursor: pointer;
             font-weight: bold;
         }
-         
+        /* Tableau */
+        #datatablesSimple {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+        background-color: #fff;
+    }
+
+    #datatablesSimple thead th {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        width:700px;
+    }
+
+    #datatablesSimple tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+    }
+
+    #datatablesSimple tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    #datatablesSimple tbody tr:hover {
+        background-color: rgba(79, 70, 229, 0.05);
+        transition: background-color 0.3s ease;
+    }
+
+    #datatablesSimple tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #datatablesSimple tbody tr:nth-child(even):hover {
+        background-color: rgba(79, 70, 229, 0.05);
+    }
+
+    #datatablesSimple img {
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    #datatablesSimple img:hover {
+        transform: scale(1.1);
+    }
+
+    #datatablesSimple .btn {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    #datatablesSimple .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    #datatablesSimple .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    #datatablesSimple .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: white;
+    }
+
+    #datatablesSimple .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+
+    #datatablesSimple .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    #datatablesSimple .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    #datatablesSimple td.actions {
+        display: flex;
+        gap: 5px;
+    }
+
+    #datatablesSimple th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    #datatablesSimple tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #datatablesSimple tbody tr:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
         </style>
     </head>
     <body class="sb-nav-fixed">
@@ -785,22 +902,20 @@
             <main>
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1>Liste des Factures</h1>
-                    <!-- <a href="{{ route('factures.create') }}" class="btn btn-primary">Nouvelle Facture</a> -->
+                    <h1>Liste des factures</h1>
                 </div>
-
                 @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
                 @endif
-
-                <table class="table">
+                <table class="table" id="datatablesSimple">
                     <thead>
                         <tr>
                             <th>Numéro</th>
                             <th>Date</th>
                             <th>produit</th>
+                            <th>Quantité</th>
                             <th>Client</th>
                             <th>Total HT</th>
                             <th>Total TVA</th>
@@ -809,37 +924,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($factures as $facture)
+                           @foreach($factures as $facture)
                         <tr>
                             <td>{{ $facture->numero_facture }}</td>
                             <td>{{ $facture->date_facture}}</td>
                             @foreach($facture->lignFactures as $lignfacture)
                             <td>{{ $lignfacture->produit->titre }}</td>
+                            <td>{{ $lignfacture->quantite}}</td>
                             @endforeach
                             <td>{{ $facture->client }}</td>
-                            <td>{{ number_format($facture->total_ht, 2) }} dh</td>
-                            <td>{{ number_format($facture->total_tva, 2) }} dh</td>
-                            <td>{{ number_format($facture->total_ttc, 2) }} dh</td>
+                            <td>{{ number_format($facture->total_ht, 2) }} DH</td>
+                            <td>{{ number_format($facture->total_tva, 2) }} DH</td>
+                            <td>{{ number_format($facture->total_ttc, 2) }} DH</td>
                             <td>
-                            <a href="{{ route('factures.pdf', $facture->id) }}" class="btn btn-sm btn-info" target="_blank">PDF</a>
-                            <button onclick="openEditModal({{ $facture->id }})" class="btn btn-sm btn-warning">Modifier</button>
-                            <form action="{{ route('factures.destroy', $facture->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')">
-                                    Supprimer
-                                </button>
-                            </form>
-                        </td>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ route('factures.pdf', $facture->id) }}" class="btn btn-sm btn-info" target="_blank">PDF</a>
+                                    <button onclick="openEditModal({{ $facture->id }})" class="btn btn-sm btn-warning mx-2">Modifier</button>
+                                    <form action="{{ route('factures.destroy', $facture->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <button onclick="openModal()" class="btn btn-primary">Nouvelle Facture</button>
+                <button onclick="openModal()" class="btn btn-primary">Nouveau facture</button>
             </div>
             </main>
             <div id="invoiceModal" class="modal">
-        <div class="modal-content">
+            <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Nouvelle Facture</h2>
             
@@ -1039,7 +1157,7 @@
             <button type="button" id="edit-add-row" class="btn btn-primary mt-3">
                 Ajouter une ligne
             </button>
-            
+
             <div class="totals mt-4">
                 <div class="total-row">
                     <span>Total HT</span>
@@ -1143,122 +1261,122 @@
                 }
             });
            // Updated form submission handling
-document.addEventListener('DOMContentLoaded', function() {
-    const invoiceForm = document.getElementById('invoiceForm');
-    const tbody = document.getElementById('invoice-items-body');
+            document.addEventListener('DOMContentLoaded', function() {
+                const invoiceForm = document.getElementById('invoiceForm');
+                const tbody = document.getElementById('invoice-items-body');
 
-    // Main form submission handler
-    invoiceForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
-        
-        // Update totals before submission
-        updateTotals();
-        
-        // Get all form data
-        const formData = new FormData(invoiceForm);
-        
-        // Validate required fields
-        if (!validateForm()) {
-            alert('Veuillez remplir tous les champs obligatoires');
-            return;
-        }
+                // Main form submission handler
+                invoiceForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    
+                    // Update totals before submission
+                    updateTotals();
+                    
+                    // Get all form data
+                    const formData = new FormData(invoiceForm);
+                    
+                    // Validate required fields
+                    if (!validateForm()) {
+                        alert('Veuillez remplir tous les champs obligatoires');
+                        return;
+                    }
 
-        // Send AJAX request
-        fetch(invoiceForm.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Facture créée avec succès');
-                window.location.href = '/factures'; // Redirect to invoices list
-            } else {
-                alert('Erreur lors de la création de la facture: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Une erreur est survenue lors de la création de la facture');
-        });
-    });
+                    // Send AJAX request
+                    fetch(invoiceForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Facture créée avec succès');
+                            window.location.href = '/factures'; // Redirect to invoices list
+                        } else {
+                            alert('Erreur lors de la création de la facture: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Une erreur est survenue lors de la création de la facture');
+                    });
+                });
 
-    // Form validation function
-    function validateForm() {
-        // Basic required fields
-        const requiredFields = [
-            'numero_facture',
-            'date_facture',
-            'societe',
-            'adresse',
-            'telephone',
-            'adresse_client',
-            'client'
-        ];
+                // Form validation function
+                function validateForm() {
+                    // Basic required fields
+                    const requiredFields = [
+                        'numero_facture',
+                        'date_facture',
+                        'societe',
+                        'adresse',
+                        'telephone',
+                        'adresse_client',
+                        'client'
+                    ];
 
-        for (let field of requiredFields) {
-            const input = invoiceForm.querySelector(`[name="${field}"]`);
-            if (!input.value.trim()) {
-                input.focus();
-                return false;
-            }
-        }
+                    for (let field of requiredFields) {
+                        const input = invoiceForm.querySelector(`[name="${field}"]`);
+                        if (!input.value.trim()) {
+                            input.focus();
+                            return false;
+                        }
+                    }
 
-        // Validate line items
-        const rows = tbody.querySelectorAll('tr');
-        for (let row of rows) {
-            const designation = row.querySelector('[name^="lignes"][name$="[designation]"]');
-            const produitId = row.querySelector('[name^="lignes"][name$="[produit_id]"]');
-            const prixHt = row.querySelector('[name^="lignes"][name$="[prix_ht]"]');
-            const quantite = row.querySelector('[name^="lignes"][name$="[quantite]"]');
-            const tva = row.querySelector('[name^="lignes"][name$="[tva]"]');
+                    // Validate line items
+                    const rows = tbody.querySelectorAll('tr');
+                    for (let row of rows) {
+                        const designation = row.querySelector('[name^="lignes"][name$="[designation]"]');
+                        const produitId = row.querySelector('[name^="lignes"][name$="[produit_id]"]');
+                        const prixHt = row.querySelector('[name^="lignes"][name$="[prix_ht]"]');
+                        const quantite = row.querySelector('[name^="lignes"][name$="[quantite]"]');
+                        const tva = row.querySelector('[name^="lignes"][name$="[tva]"]');
 
-            if (!designation.value.trim() || !produitId.value || !prixHt.value || !quantite.value || !tva.value) {
-                return false;
-            }
-        }
+                        if (!designation.value.trim() || !produitId.value || !prixHt.value || !quantite.value || !tva.value) {
+                            return false;
+                        }
+                    }
 
-        return true;
-    }
+                    return true;
+                }
 
-    // Enhanced updateTotals function
-    function updateTotals() {
-        let totalHt = 0;
-        let totalTva = 0;
-        let totalTtc = 0;
+                // Enhanced updateTotals function
+                function updateTotals() {
+                    let totalHt = 0;
+                    let totalTva = 0;
+                    let totalTtc = 0;
 
-        const rows = tbody.querySelectorAll('tr');
-        rows.forEach(row => {
-            const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
-            const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
-            const tva = parseFloat(row.querySelector('.tva').value) || 0;
-            const remise = parseFloat(row.querySelector('.remise').value) || 0;
+                    const rows = tbody.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
+                        const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
+                        const tva = parseFloat(row.querySelector('.tva').value) || 0;
+                        const remise = parseFloat(row.querySelector('.remise').value) || 0;
 
-            const montantHt = prixHt * quantite;
-            const montantRemise = montantHt * (remise / 100);
-            const htApresRemise = montantHt - montantRemise;
-            const montantTva = htApresRemise * (tva / 100);
+                        const montantHt = prixHt * quantite;
+                        const montantRemise = montantHt * (remise / 100);
+                        const htApresRemise = montantHt - montantRemise;
+                        const montantTva = htApresRemise * (tva / 100);
 
-            totalHt += htApresRemise;
-            totalTva += montantTva;
-        });
+                        totalHt += htApresRemise;
+                        totalTva += montantTva;
+                    });
 
-        totalTtc = totalHt + totalTva;
+                    totalTtc = totalHt + totalTva;
 
-        // Update display
-        document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
-        document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
-        document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
+                    // Update display
+                    document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
+                    document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
+                    document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
 
-        // Update hidden inputs
-        document.getElementById('total-ht-input').value = totalHt.toFixed(2);
-        document.getElementById('total-tva-input').value = totalTva.toFixed(2);
-        document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
-    }
-});
+                    // Update hidden inputs
+                    document.getElementById('total-ht-input').value = totalHt.toFixed(2);
+                    document.getElementById('total-tva-input').value = totalTva.toFixed(2);
+                    document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
+                }
+            });
             // Ajout d'une nouvelle ligne
             document.getElementById('add-row').addEventListener('click', function() {
                 const rowCount = tbody.children.length;
@@ -1296,38 +1414,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 tbody.appendChild(newRow);
             });
             function updateTotals() {
-    let totalHt = 0;
-    let totalTva = 0;
-    let totalTtc = 0;
+            let totalHt = 0;
+            let totalTva = 0;
+            let totalTtc = 0;
 
-    const rows = tbody.querySelectorAll('tr');
-    rows.forEach(row => {
-        const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
-        const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
-        const tva = parseFloat(row.querySelector('.tva').value) || 0;
-        const remise = parseFloat(row.querySelector('.remise').value) || 0;
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const prixHt = parseFloat(row.querySelector('.prix-ht').value) || 0;
+                const quantite = parseFloat(row.querySelector('.quantite').value) || 0;
+                const tva = parseFloat(row.querySelector('.tva').value) || 0;
+                const remise = parseFloat(row.querySelector('.remise').value) || 0;
 
-        const montantHt = prixHt * quantite;
-        const montantRemise = montantHt * (remise / 100);
-        const htApresRemise = montantHt - montantRemise;
-        const montantTva = htApresRemise * (tva / 100);
+                const montantHt = prixHt * quantite;
+                const montantRemise = montantHt * (remise / 100);
+                const htApresRemise = montantHt - montantRemise;
+                const montantTva = htApresRemise * (tva / 100);
 
-        totalHt += htApresRemise;
-        totalTva += montantTva;
-    });
+                totalHt += htApresRemise;
+                totalTva += montantTva;
+            });
 
-    totalTtc = totalHt + totalTva;
+            totalTtc = totalHt + totalTva;
 
-    // Mettre à jour les champs cachés
-    document.getElementById('total-ht-input').value = totalHt.toFixed(2);
-    document.getElementById('total-tva-input').value = totalTva.toFixed(2);
-    document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
+            // Mettre à jour les champs cachés
+            document.getElementById('total-ht-input').value = totalHt.toFixed(2);
+            document.getElementById('total-tva-input').value = totalTva.toFixed(2);
+            document.getElementById('total-ttc-input').value = totalTtc.toFixed(2);
 
-    // Mettre à jour l'affichage
-    document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
-    document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
-    document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
-}
+            // Mettre à jour l'affichage
+            document.getElementById('total-ht').textContent = totalHt.toFixed(2) + ' €';
+            document.getElementById('total-tva').textContent = totalTva.toFixed(2) + ' €';
+            document.getElementById('total-ttc').textContent = totalTtc.toFixed(2) + ' €';
+        }
             // Fonctions pour le modal
             window.openModal = function() {
                 document.getElementById('invoiceModal').style.display = 'block';
@@ -1372,143 +1490,151 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         // Open the edit invoice modal
-function openEditModal(id) {
-    // Set form action
-    document.getElementById('editInvoiceForm').action = '/factures/' + id;
-    
-    // Fetch invoice data and populate the form
-    fetch('/factures/' + id + '/edit')
-        .then(response => response.json())
-        .then(data => {
-            // Populate basic info
-            document.getElementById('edit-invoice-number').value = data.facture.numero_facture;
-            document.getElementById('edit-invoice-date').value = data.facture.date_facture;
-            document.getElementById('edit-company-name').value = data.facture.societe;
-            document.getElementById('edit-company-address').value = data.facture.adresse;
-            document.getElementById('edit-company-phone').value = data.facture.telephone;
-            document.getElementById('edit-client-address').value = data.facture.adresse_client;
-            document.getElementById('edit-client').value = data.facture.client;
-            
-            // Clear existing rows
-            const tbody = document.getElementById('edit-invoice-items-body');
-            tbody.innerHTML = '';
-            
-            // Populate invoice lines
-            data.lignes.forEach((ligne, index) => {
-                addEditInvoiceRow(index, ligne);
-            });
-            
-            // Update totals
-            updateEditTotals();
-        });
-    
-    // Show the modal
-    document.getElementById('editInvoiceModal').style.display = 'block';
-}
+                function openEditModal(id) {
+                    // Set form action
+                    document.getElementById('editInvoiceForm').action = '/factures/' + id;
+                    
+                    // Fetch invoice data and populate the form
+                    fetch('/factures/' + id + '/edit')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Populate basic info
+                            document.getElementById('edit-invoice-number').value = data.facture.numero_facture;
+                            document.getElementById('edit-invoice-date').value = data.facture.date_facture;
+                            document.getElementById('edit-company-name').value = data.facture.societe;
+                            document.getElementById('edit-company-address').value = data.facture.adresse;
+                            document.getElementById('edit-company-phone').value = data.facture.telephone;
+                            document.getElementById('edit-client-address').value = data.facture.adresse_client;
+                            document.getElementById('edit-client').value = data.facture.client;
+                            
+                            // Clear existing rows
+                            const tbody = document.getElementById('edit-invoice-items-body');
+                            tbody.innerHTML = '';
+                            
+                            // Populate invoice lines
+                            data.lignes.forEach((ligne, index) => {
+                                addEditInvoiceRow(index, ligne);
+                            });
+                            
+                            // Update totals
+                            updateEditTotals();
+                        });
+                    
+                    // Show the modal
+                    document.getElementById('editInvoiceModal').style.display = 'block';
+                }
 
-// Close the edit invoice modal
-function closeEditModal() {
-    document.getElementById('editInvoiceModal').style.display = 'none';
-}
+                // Close the edit invoice modal
+                function closeEditModal() {
+                    document.getElementById('editInvoiceModal').style.display = 'none';
+                }
 
-// Add a row to the edit invoice form
-function addEditInvoiceRow(index, ligne = null) {
-    const tbody = document.getElementById('edit-invoice-items-body');
-    const row = document.createElement('tr');
-    
-    row.innerHTML = `
-        <td>
-            <input type="text" name="lignes[${index}][designation]" value="${ligne ? ligne.designation : ''}" required>
-        </td>
-        <td>
-            <select name="lignes[${index}][produit_id]" class="product-select form-control" required>
-                <option value="">Sélectionnez un produit</option>
-                @foreach($produits as $produit)
-                    <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}" ${ligne && ligne.produit_id == {{ $produit->id }} ? 'selected' : ''}>
-                        {{ $produit->titre }}
-                    </option>
-                @endforeach
-            </select>
-        </td>
-        <td>
-            <input type="number" name="lignes[${index}][prix_ht]" value="${ligne ? ligne.prix_ht : ''}" class="prix-ht" step="0.01" required>
-        </td>
-        <td>
-            <input type="number" name="lignes[${index}][quantite]" value="${ligne ? ligne.quantite : ''}" class="quantite" required>
-        </td>
-        <td>
-            <input type="number" name="lignes[${index}][tva]" value="${ligne ? ligne.tva : ''}" class="tva" step="0.01" required>
-        </td>
-        <td>
-            <input type="number" name="lignes[${index}][remise]" value="${ligne ? ligne.remise : '0'}" class="remise" step="0.01">
-        </td>
-        <td>
-            <button type="button" class="btn btn-danger remove-row">Supprimer</button>
-        </td>
-    `;
-    
-    tbody.appendChild(row);
-    
-    // Add event listeners for this row
-    row.querySelector('.remove-row').addEventListener('click', function() {
-        row.remove();
-        updateEditTotals();
-    });
-    
-    row.querySelectorAll('.prix-ht, .quantite, .tva, .remise').forEach(input => {
-        input.addEventListener('change', updateEditTotals);
-    });
-    
-    // Product selection handler
-    row.querySelector('.product-select').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption && selectedOption.dataset.prix) {
-            row.querySelector('.prix-ht').value = selectedOption.dataset.prix;
-            updateEditTotals();
-        }
-    });
-}
+                // Add a row to the edit invoice form
+                function addEditInvoiceRow(index, ligne = null) {
+                    const tbody = document.getElementById('edit-invoice-items-body');
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" name="lignes[${index}][designation]" value="${ligne ? ligne.designation : ''}" required>
+                        </td>
+                        <td>
+                            <select name="lignes[${index}][produit_id]" class="product-select form-control" required>
+                                <option value="">Sélectionnez un produit</option>
+                                @foreach($produits as $produit)
+                                    <option value="{{ $produit->id }}" data-prix="{{ $produit->prix_unitaire }}" ${ligne && ligne.produit_id == {{ $produit->id }} ? 'selected' : ''}>
+                                        {{ $produit->titre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="lignes[${index}][prix_ht]" value="${ligne ? ligne.prix_ht : ''}" class="prix-ht" step="0.01" required>
+                        </td>
+                        <td>
+                            <input type="number" name="lignes[${index}][quantite]" value="${ligne ? ligne.quantite : ''}" class="quantite" required>
+                        </td>
+                        <td>
+                            <input type="number" name="lignes[${index}][tva]" value="${ligne ? ligne.tva : ''}" class="tva" step="0.01" required>
+                        </td>
+                        <td>
+                            <input type="number" name="lignes[${index}][remise]" value="${ligne ? ligne.remise : '0'}" class="remise" step="0.01">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                    
+                    // Add event listeners for this row
+                    row.querySelector('.remove-row').addEventListener('click', function() {
+                        row.remove();
+                        updateEditTotals();
+                    });
+                    
+                    row.querySelectorAll('.prix-ht, .quantite, .tva, .remise').forEach(input => {
+                        input.addEventListener('change', updateEditTotals);
+                    });
+                    
+                    // Product selection handler
+                    row.querySelector('.product-select').addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (selectedOption && selectedOption.dataset.prix) {
+                            row.querySelector('.prix-ht').value = selectedOption.dataset.prix;
+                            updateEditTotals();
+                        }
+                    });
+                }
 
-// Update the totals in the edit form
-function updateEditTotals() {
-    let totalHT = 0;
-    let totalTVA = 0;
-    let totalTTC = 0;
-    
-    const rows = document.querySelectorAll('#edit-invoice-items-body tr');
-    
-    rows.forEach(row => {
-        const prixHT = parseFloat(row.querySelector('.prix-ht').value) || 0;
-        const quantite = parseInt(row.querySelector('.quantite').value) || 0;
-        const tva = parseFloat(row.querySelector('.tva').value) || 0;
-        const remise = parseFloat(row.querySelector('.remise').value) || 0;
-        
-        const ligneHT = prixHT * quantite;
-        const ligneTVA = ligneHT * (tva / 100);
-        const ligneRemise = ligneHT * (remise / 100);
-        const ligneTTC = ligneHT + ligneTVA - ligneRemise;
-        
-        totalHT += ligneHT;
-        totalTVA += ligneTVA;
-        totalTTC += ligneTTC;
-    });
-    
-    document.getElementById('edit-total-ht').textContent = totalHT.toFixed(2) + ' €';
-    document.getElementById('edit-total-tva').textContent = totalTVA.toFixed(2) + ' €';
-    document.getElementById('edit-total-ttc').textContent = totalTTC.toFixed(2) + ' €';
-    
-    document.getElementById('edit-total-ht-input').value = totalHT.toFixed(2);
-    document.getElementById('edit-total-tva-input').value = totalTVA.toFixed(2);
-    document.getElementById('edit-total-ttc-input').value = totalTTC.toFixed(2);
-}
+                // Update the totals in the edit form
+                function updateEditTotals() {
+                    let totalHT = 0;
+                    let totalTVA = 0;
+                    let totalTTC = 0;
+                    
+                    const rows = document.querySelectorAll('#edit-invoice-items-body tr');
+                    
+                    rows.forEach(row => {
+                        const prixHT = parseFloat(row.querySelector('.prix-ht').value) || 0;
+                        const quantite = parseInt(row.querySelector('.quantite').value) || 0;
+                        const tva = parseFloat(row.querySelector('.tva').value) || 0;
+                        const remise = parseFloat(row.querySelector('.remise').value) || 0;
+                        
+                        const ligneHT = prixHT * quantite;
+                        const ligneTVA = ligneHT * (tva / 100);
+                        const ligneRemise = ligneHT * (remise / 100);
+                        const ligneTTC = ligneHT + ligneTVA - ligneRemise;
+                        
+                        totalHT += ligneHT;
+                        totalTVA += ligneTVA;
+                        totalTTC += ligneTTC;
+                    });
+                    
+                    document.getElementById('edit-total-ht').textContent = totalHT.toFixed(2) + ' €';
+                    document.getElementById('edit-total-tva').textContent = totalTVA.toFixed(2) + ' €';
+                    document.getElementById('edit-total-ttc').textContent = totalTTC.toFixed(2) + ' €';
+                    
+                    document.getElementById('edit-total-ht-input').value = totalHT.toFixed(2);
+                    document.getElementById('edit-total-tva-input').value = totalTVA.toFixed(2);
+                    document.getElementById('edit-total-ttc-input').value = totalTTC.toFixed(2);
+                }
 
-// Initialize edit form event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Edit form "Add row" button
-    document.getElementById('edit-add-row').addEventListener('click', function() {
-        const rowCount = document.querySelectorAll('#edit-invoice-items-body tr').length;
-        addEditInvoiceRow(rowCount);
-    });
-});
+                // Initialize edit form event listeners
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Edit form "Add row" button
+                    document.getElementById('edit-add-row').addEventListener('click', function() {
+                        const rowCount = document.querySelectorAll('#edit-invoice-items-body tr').length;
+                        addEditInvoiceRow(rowCount);
+                    });
+                });
 
+                window.addEventListener('DOMContentLoaded', event => {
+                    // Simple-DataTables
+                    // https://github.com/fiduswriter/Simple-DataTables/wiki
+                    const datatablesSimple = document.getElementById('datatablesSimple');
+                    if (datatablesSimple) {
+                        new simpleDatatables.DataTable(datatablesSimple);
+                    }
+                });
     </script>

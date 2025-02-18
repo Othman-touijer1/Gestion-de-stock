@@ -591,7 +591,7 @@
                             <tbody>
                                 @foreach($historiques as $historique)
                                     <tr>
-                                        <td>{{ $historique->produit->nom }}</td>
+                                        <td>{{ $historique->produit->titre }}</td>
                                         <td>{{ $historique->depot->nom }}</td>
                                         <td>{{ $historique->quantite }}</td>
                                         <td>{{ ucfirst($historique->type) }}</td>
